@@ -1,0 +1,76 @@
+{
+  "header": {
+    "brand": "SmartLead",
+    "home": "Home",
+    "properties": "Properties",
+    "gallery": "Gallery X",
+    "myInterests": "My Interests",
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "footer": {
+    "brand": "SmartLead",
+    "tagline": "Your trusted marketplace for finding the perfect property in Egypt",
+    "about": "About",
+    "aboutUs": "About Us",
+    "ourTeam": "Our Team",
+    "careers": "Careers",
+    "press": "Press",
+    "support": "Support",
+    "contactUs": "Contact Us",
+    "faqs": "FAQs",
+    "helpCenter": "Help Center",
+    "feedback": "Feedback",
+    "legal": "Legal",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "cookiePolicy": "Cookie Policy",
+    "disclaimer": "Disclaimer",
+    "copyright": "© 2024 SmartLead. All rights reserved."
+  },
+  "buttons": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "apply": "Apply",
+    "reset": "Reset"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "noResults": "No results found",
+    "or": "or",
+    "and": "and",
+    "required": "Required",
+    "optional": "Optional",
+    "yes": "Yes",
+    "no": "No",
+    "currency": "SAR",
+    "select": "Select type"
+  },
+  "propertyTypes": {
+    "apartment": "Apartment",
+    "villa": "Villa",
+    "townhouse": "Townhouse",
+    "duplex": "Duplex",
+    "commercial": "Commercial"
+  },
+  "locations": {
+    "newCairo": "New Cairo",
+    "nac": "NAC",
+    "sixthOctober": "6th October",
+    "sheikhZayed": "Sheikh Zayed",
+    "northCoast": "North Coast"
+  }
+}

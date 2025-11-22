@@ -1,0 +1,103 @@
+{
+    "title": "العقارات",
+    "searchPlaceholder": "ابحث عن عقارات...",
+    "listing": {
+        "title": "العقارات المتاحة",
+        "showing": "عرض {{count}} من {{total}} عقار",
+        "welcomeBack": "مرحباً بعودتك، {{name}}!",
+        "profileHelping": "ملفك الشخصي يساعدنا في مطابقتك مع أفضل العقارات",
+        "leadScore": "نقاط العميل المحتمل",
+        "lead": "عميل محتمل",
+        "noProperties": "لم يتم العثور على عقارات تطابق المرشحات.",
+        "tryAdjusting": "حاول تعديل معايير البحث."
+    },
+    "filters": {
+        "title": "الفلاتر",
+        "location": "الموقع",
+        "priceRange": "نطاق السعر",
+        "propertyType": "نوع العقار",
+        "bedrooms": "غرف النوم",
+        "bathrooms": "الحمامات",
+        "minArea": "الحد الأدنى للمساحة (متر مربع)",
+        "maxArea": "الحد الأقصى للمساحة (متر مربع)",
+        "deliveryDate": "تاريخ التسليم",
+        "paymentPlan": "خطة الدفع",
+        "unknownError": "خطأ غير معروف",
+        "anyBedrooms": "أي عدد",
+        "anyBathrooms": "أي عدد",
+        "cash": "كاش",
+        "installments": "تقسيط",
+        "both": "كلاهما"
+    },
+    "propertyCard": {
+        "bedrooms": "غرف نوم",
+        "bathrooms": "حمامات",
+        "area": "متر مربع",
+        "delivery": "التسليم",
+        "viewDetails": "عرض التفاصيل",
+        "interested": "أنا مهتم"
+    },
+    "propertyDetails": {
+        "overview": "نظرة عامة",
+        "description": "الوصف",
+        "features": "المميزات",
+        "location": "الموقع",
+        "price": "السعر",
+        "type": "النوع",
+        "bedrooms": "غرف النوم",
+        "bathrooms": "الحمامات",
+        "area": "المساحة (م²)",
+        "deliveryDate": "تاريخ التسليم",
+        "paymentPlan": "خطة الدفع",
+        "projectName": "المشروع",
+        "status": "الحالة",
+        "available": "متاح",
+        "sold": "مباع",
+        "reserved": "محجوز",
+        "contactMarketer": "تواصل مع المسوق",
+        "interested": "أنا مهتم",
+        "backToProperties": "العودة للعقارات",
+        "similarProperties": "عقارات مماثلة",
+        "propertyNotFound": "العقار غير موجود",
+        "browseAll": "تصفح جميع العقارات"
+    },
+    "gallery": {
+        "title": "المعرض X",
+        "subtitle": "استكشف العقارات الرائعة من مجموعتنا",
+        "viewProperty": "عرض العقار",
+        "noImages": "لا توجد صور متاحة",
+        "checkBack": "تحقق مرة أخرى قريباً للحصول على صور العقارات"
+    },
+    "myInterests": {
+        "title": "اهتماماتي",
+        "subtitle": "العقارات التي أبديت اهتمامك بها",
+        "property": "العقار",
+        "expressedOn": "تم الإبداء في",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "viewProperty": "عرض العقار",
+        "noInterests": "لم تبدِ اهتمامك بأي عقارات بعد.",
+        "noInterestsDesc": "لم تبدِ اهتمامك بأي عقارات حتى الآن. تصفح العقارات للبدء",
+        "browseButton": "تصفح العقارات"
+    },
+    "interestButton": {
+        "interested": "أنا مهتم",
+        "alreadyInterested": "تم إبداء الاهتمام",
+        "processing": "جاري المعالجة...",
+        "loginRequired": "سجل دخولك لإبداء الاهتمام",
+        "validationWarning": "هذا العقار لا يتطابق مع تفضيلاتك المحفوظة:",
+        "mismatchTitle": "عدم تطابق التفضيلات",
+        "continueQuestion": "هل تريد المتابعة على أي حال؟",
+        "proceed": "المتابعة على أي حال",
+        "cancel": "إلغاء",
+        "success": "تم تسجيل اهتمامك بنجاح! سيتواصل معك المسوق قريباً.",
+        "error": "فشل تسجيل الاهتمام. يرجى المحاولة مرة أخرى.",
+        "onlyBuyers": "المشترون فقط يمكنهم إبداء الاهتمام بالعقارات",
+        "alreadyExpressed": "لقد أبديت اهتماماً بهذا العقار بالفعل",
+        "mismatchReasons": {
+            "location": "موقع العقار لا يتطابق مع المواقع المفضلة لديك",
+            "type": "نوع العقار لا يتطابق مع الأنواع المفضلة لديك",
+            "budget": "سعر العقار يتجاوز ميزانيتك"
+        }
+    }
+}

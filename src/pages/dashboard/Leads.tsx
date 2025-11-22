@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/lib/context/AuthContext'
 import { supabase } from '@/lib/supabase'
 
@@ -22,6 +23,7 @@ interface Lead {
 }
 
 export default function Leads() {
+  const { t } = useTranslation('dashboard')
   const { user } = useAuth()
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState(true)
@@ -52,7 +54,7 @@ export default function Leads() {
           buyer_property_types,
           status,
           created_at,
-          properties (
+          properties(
             title,
             location,
             price
@@ -146,7 +148,7 @@ export default function Leads() {
     return (
       <div>
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Leads</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('leads.title')}</h1>
           <p className="text-gray-600">Manage your property leads and inquiries</p>
         </div>
         <div className="bg-white rounded-xl shadow-sm p-12 text-center">
@@ -160,7 +162,7 @@ export default function Leads() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Leads</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('leads.title')}</h1>
         <p className="text-gray-600">Manage your property leads and inquiries</p>
       </div>
 
@@ -169,51 +171,45 @@ export default function Leads() {
           <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">No Leads Yet</h3>
-          <p className="text-gray-600 mb-6">
-            When buyers express interest in your properties, they will appear here.
-          </p>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('leads.noLeads')}</h3>
+          <p className="text-gray-600 mb-6">{t('leads.waitForInterest')}</p>
         </div>
       ) : (
         <div>
           <div className="mb-6 flex gap-2">
             <button
               onClick={() => setFilter('all')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                filter === 'all'
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${filter === 'all'
                   ? 'bg-primary-blue text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-50'
-              }`}
+                }`}
             >
               All ({leads.length})
             </button>
             <button
               onClick={() => setFilter('Hot')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                filter === 'Hot'
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${filter === 'Hot'
                   ? 'bg-green-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-50'
-              }`}
+                }`}
             >
               🔥 Hot ({leads.filter(l => l.buyerScoreTier === 'Hot').length})
             </button>
             <button
               onClick={() => setFilter('Warm')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                filter === 'Warm'
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${filter === 'Warm'
                   ? 'bg-yellow-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-50'
-              }`}
+                }`}
             >
               ⚡ Warm ({leads.filter(l => l.buyerScoreTier === 'Warm').length})
             </button>
             <button
               onClick={() => setFilter('Cold')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                filter === 'Cold'
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${filter === 'Cold'
                   ? 'bg-gray-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-50'
-              }`}
+                }`}
             >
               ❄️ Cold ({leads.filter(l => l.buyerScoreTier === 'Cold').length})
             </button>
@@ -225,22 +221,22 @@ export default function Leads() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Buyer
+                      {t('leads.buyer')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Score
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Property
+                      {t('leads.property')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Budget
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
+                      {t('leads.status')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
+                      {t('leads.actions')}
                     </th>
                   </tr>
                 </thead>

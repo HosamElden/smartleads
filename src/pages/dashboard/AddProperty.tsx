@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/lib/context/AuthContext'
 import { supabase } from '@/lib/supabase'
 import PropertyForm from '@/components/PropertyForm'
 
 export default function AddProperty() {
+  const { t } = useTranslation('dashboard')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
@@ -47,14 +49,14 @@ export default function AddProperty() {
       }
 
       console.log('Property added to database:', newProperty)
-      setSuccessMessage('Property added successfully!')
+      setSuccessMessage(t('addProperty.success'))
 
       setTimeout(() => {
         navigate('/dashboard/listings')
       }, 1500)
     } catch (error: any) {
       console.error('Error adding property:', error)
-      setErrorMessage(error.message || 'Failed to add property. Please try again.')
+      setErrorMessage(error.message || t('addProperty.error'))
     } finally {
       setIsSubmitting(false)
     }
@@ -63,8 +65,8 @@ export default function AddProperty() {
   return (
     <div className="max-w-4xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Add New Property</h1>
-        <p className="text-gray-600 mt-1">Fill in the details to list a new property</p>
+        <h1 className="text-3xl font-bold text-gray-900">{t('addProperty.title')}</h1>
+        <p className="text-gray-600 mt-1">{t('addProperty.subtitle')}</p>
       </div>
 
       {successMessage && (

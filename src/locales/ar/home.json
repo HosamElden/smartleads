@@ -1,0 +1,59 @@
+{
+    "hero": {
+        "title": "اعثر على عقارك المثالي مع سمارت ليدز",
+        "subtitle": "الطريقة الذكية لشراء وبيع العقارات",
+        "searchLocation": "الموقع",
+        "searchPrice": "نطاق السعر",
+        "searchType": "نوع العقار",
+        "searchButton": "تصفح العقارات",
+        "anyLocation": "أي موقع",
+        "anyPrice": "أي سعر",
+        "anyType": "أي نوع",
+        "priceUnder2M": "أقل من 2 مليون ريال",
+        "price2MTo5M": "2 - 5 مليون ريال",
+        "price5MTo10M": "5 - 10 مليون ريال",
+        "priceAbove10M": "أكثر من 10 مليون ريال"
+    },
+    "categories": {
+        "title": "تصفح حسب الفئة",
+        "apartments": "شقق",
+        "apartmentsCount": "45 إعلان",
+        "villas": "فلل",
+        "villasCount": "32 إعلان",
+        "newProjects": "مشاريع جديدة",
+        "newProjectsCount": "18 إعلان",
+        "commercial": "تجاري",
+        "commercialCount": "12 إعلان",
+        "installments": "بالتقسيط",
+        "installmentsCount": "28 إعلان",
+        "resale": "إعادة بيع",
+        "resaleCount": "24 إعلان"
+    },
+    "developers": {
+        "title": "مشاريع مميزة من أفضل المطورين",
+        "seeAll": "عرض جميع المشاريع"
+    },
+    "latestProperties": {
+        "title": "أحدث العقارات",
+        "subtitle": "اكتشف أحدث إعلاناتنا",
+        "viewAll": "عرض جميع العقارات",
+        "loading": "جاري تحميل العقارات..."
+    },
+    "whyChooseUs": {
+        "title": "لماذا تختارنا",
+        "verifiedListings": "إعلانات موثقة",
+        "verifiedListingsDesc": "جميع العقارات موثقة من قبل فريقنا",
+        "trustedMarketers": "مسوقون موثوقون",
+        "trustedMarketersDesc": "العمل مع محترفي العقارات المعتمدين",
+        "easySearch": "بحث سهل",
+        "easySearchDesc": "اعثر على عقارك المثالي باستخدام مرشحات ذكية",
+        "securePlatform": "منصة آمنة",
+        "securePlatformDesc": "بياناتك محمية معنا"
+    },
+    "cta": {
+        "title": "سجل اليوم واحصل على وصول فوري لأفضل عروض العقارات",
+        "subtitle": "انضم إلى آلاف المشترين والمسوقين الذين يستخدمون منصتنا بالفعل",
+        "forBuyers": "للمشترين",
+        "forMarketers": "للمسوقين"
+    }
+}

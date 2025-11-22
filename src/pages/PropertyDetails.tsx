@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import Header from '@/components/Header'
 import PropertyCardNew from '@/components/PropertyCardNew'
 import InterestButton from '@/components/InterestButton'
@@ -7,6 +8,7 @@ import { supabase } from '@/lib/supabase'
 import { Property } from '@/lib/types'
 
 export default function PropertyDetails() {
+  const { t } = useTranslation('properties')
   const { id } = useParams<{ id: string }>()
   const [property, setProperty] = useState<Property | null>(null)
   const [similarProperties, setSimilarProperties] = useState<Property[]>([])
@@ -108,7 +110,7 @@ export default function PropertyDetails() {
         <div className="flex items-center justify-center py-20">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-blue"></div>
-            <p className="text-gray-600 mt-4">Loading property...</p>
+            <p className="text-gray-600 mt-4">{t('common:common.loading', { ns: 'common' })}</p>
           </div>
         </div>
       </div>
@@ -121,9 +123,9 @@ export default function PropertyDetails() {
         <Header />
         <div className="flex items-center justify-center py-20">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Property Not Found</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">{t('propertyDetails.propertyNotFound', { defaultValue: 'Property Not Found' })}</h1>
             <Link to="/properties" className="text-primary-blue hover:underline">
-              Browse all properties
+              {t('propertyDetails.browseAll', { defaultValue: 'Browse all properties' })}
             </Link>
           </div>
         </div>
@@ -157,10 +159,10 @@ export default function PropertyDetails() {
       <Header />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Link to="/properties" className="inline-flex items-center text-primary-blue hover:underline mb-6">
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          Back to Properties
+          {t('propertyDetails.backToProperties')}
         </Link>
 
         <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
@@ -195,9 +197,8 @@ export default function PropertyDetails() {
                     <button
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
-                      className={`w-2 h-2 rounded-full transition-colors ${
-                        index === currentImageIndex ? 'bg-white' : 'bg-white/50'
-                      }`}
+                      className={`w-2 h-2 rounded-full transition-colors ${index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                        }`}
                     />
                   ))}
                 </div>
@@ -230,34 +231,34 @@ export default function PropertyDetails() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8 pb-8 border-b border-gray-200">
               <div className="text-center">
                 <div className="text-3xl font-bold text-gray-900 mb-1">{property.area}</div>
-                <div className="text-sm text-gray-600">Area (m²)</div>
+                <div className="text-sm text-gray-600">{t('propertyDetails.area')}</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-gray-900 mb-1">{property.bedrooms}</div>
-                <div className="text-sm text-gray-600">Bedrooms</div>
+                <div className="text-sm text-gray-600">{t('propertyDetails.bedrooms')}</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-gray-900 mb-1">{property.bathrooms}</div>
-                <div className="text-sm text-gray-600">Bathrooms</div>
+                <div className="text-sm text-gray-600">{t('propertyDetails.bathrooms')}</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-gray-900 mb-1">{property.status}</div>
-                <div className="text-sm text-gray-600">Status</div>
+                <div className="text-sm text-gray-600">{t('propertyDetails.status')}</div>
               </div>
             </div>
 
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Description</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('propertyDetails.description')}</h2>
               <p className="text-gray-700 leading-relaxed">{property.description}</p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6 mb-8">
               <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Payment Plan</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">{t('propertyDetails.paymentPlan')}</h3>
                 <p className="text-gray-700">{property.paymentPlan}</p>
               </div>
               <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Delivery Date</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">{t('propertyDetails.deliveryDate')}</h3>
                 <p className="text-gray-700">{formatDate(property.deliveryDate)}</p>
               </div>
             </div>
@@ -268,7 +269,7 @@ export default function PropertyDetails() {
 
         {similarProperties.length > 0 && (
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Similar Properties</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('propertyDetails.similarProperties', { defaultValue: 'Similar Properties' })}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {similarProperties.map((prop) => (
                 <PropertyCardNew key={prop.id} property={prop} />

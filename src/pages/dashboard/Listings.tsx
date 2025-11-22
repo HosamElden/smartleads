@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/lib/context/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { Property } from '@/lib/types'
 
 export default function Listings() {
+  const { t } = useTranslation('dashboard')
   const { user } = useAuth()
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
@@ -98,14 +100,14 @@ export default function Listings() {
     <div>
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">My Listings</h1>
-          <p className="text-gray-600 mt-1">Manage your property listings</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('listings.title')}</h1>
+          <p className="text-gray-600 mt-1">{t('listings.description')}</p>
         </div>
         <Link
           to="/dashboard/add-property"
           className="px-6 py-3 bg-primary-blue text-white rounded-lg font-semibold hover:scale-105 transition-transform duration-200"
         >
-          + Add New Property
+          + {t('listings.addNew')}
         </Link>
       </div>
 
@@ -133,7 +135,7 @@ export default function Listings() {
             to="/dashboard/add-property"
             className="inline-block px-6 py-3 bg-primary-blue text-white rounded-lg font-semibold hover:scale-105 transition-transform duration-200"
           >
-            Add Your First Property
+            {t('listings.addFirst')}
           </Link>
         </div>
       ) : (
@@ -179,13 +181,13 @@ export default function Listings() {
                     to={`/dashboard/listings/${property.id}/edit`}
                     className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold text-center hover:bg-gray-200 transition-colors"
                   >
-                    Edit
+                    {t('listings.edit')}
                   </Link>
                   <button
                     onClick={() => setDeleteConfirm(property.id)}
                     className="flex-1 px-4 py-2 bg-red-50 text-red-600 rounded-lg font-semibold hover:bg-red-100 transition-colors"
                   >
-                    Delete
+                    {t('listings.delete')}
                   </button>
                 </div>
               </div>
@@ -212,7 +214,7 @@ export default function Listings() {
                 onClick={() => handleDelete(deleteConfirm)}
                 className="flex-1 px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors"
               >
-                Delete
+                {t('listings.delete')}
               </button>
             </div>
           </div>

@@ -2,11 +2,13 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { marketerRegistrationSchema, type MarketerRegistrationInput } from '@/lib/validations/auth'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/context/AuthContext'
 
 export default function MarketerRegister() {
+  const { t } = useTranslation('auth')
   const navigate = useNavigate()
   const { login } = useAuth()
 
@@ -101,8 +103,8 @@ export default function MarketerRegister() {
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">Join SmartLead as a Marketer</h1>
-      <p className="text-gray-600 mb-8">Create your account to start listing properties</p>
+      <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('marketerRegister.title')}</h1>
+      <p className="text-gray-600 mb-8">{t('marketerRegister.subtitle')}</p>
 
       {validationError && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
@@ -112,18 +114,18 @@ export default function MarketerRegister() {
 
       <form onSubmit={handleSubmit(onSubmit, (errors) => {
         console.log('Form validation errors:', errors)
-        setValidationError('Please fill in all required fields correctly')
+        setValidationError(t('marketerRegister.fillAllFields'))
       })} className="space-y-6">
         <div>
           <label htmlFor="fullName" className="block text-sm font-semibold text-gray-700 mb-2">
-            Full Name *
+            {t('marketerRegister.fullName')}
           </label>
           <input
             {...register('fullName')}
             type="text"
             id="fullName"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
-            placeholder="Enter your full name"
+            placeholder={t('marketerRegister.fullNamePlaceholder')}
           />
           {errors.fullName && (
             <p className="text-red-600 text-sm mt-1">{errors.fullName.message}</p>
@@ -132,14 +134,14 @@ export default function MarketerRegister() {
 
         <div>
           <label htmlFor="companyName" className="block text-sm font-semibold text-gray-700 mb-2">
-            Company Name (optional)
+            {t('marketerRegister.companyName')}
           </label>
           <input
             {...register('companyName')}
             type="text"
             id="companyName"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
-            placeholder="Your company name"
+            placeholder={t('marketerRegister.companyNamePlaceholder')}
           />
           {errors.companyName && (
             <p className="text-red-600 text-sm mt-1">{errors.companyName.message}</p>
@@ -148,7 +150,7 @@ export default function MarketerRegister() {
 
         <div>
           <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-            Email *
+            {t('marketerRegister.email')}
           </label>
           <input
             {...register('email')}
@@ -164,7 +166,7 @@ export default function MarketerRegister() {
 
         <div>
           <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-            Phone *
+            {t('marketerRegister.phone')}
           </label>
           <input
             {...register('phone')}
@@ -180,14 +182,14 @@ export default function MarketerRegister() {
 
         <div>
           <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
-            Password *
+            {t('marketerRegister.password')}
           </label>
           <input
             {...register('password')}
             type="password"
             id="password"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
-            placeholder="Min 8 characters"
+            placeholder={t('marketerRegister.passwordPlaceholder')}
           />
           {errors.password && (
             <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
@@ -196,7 +198,7 @@ export default function MarketerRegister() {
 
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-3">
-            Role *
+            {t('marketerRegister.role')}
           </label>
           <div className="space-y-2">
             <label className="flex items-center space-x-2 cursor-pointer">
@@ -206,7 +208,7 @@ export default function MarketerRegister() {
                 value="Marketer"
                 className="w-4 h-4 text-primary-blue border-gray-300 focus:ring-primary-blue"
               />
-              <span className="text-sm text-gray-700">Marketer</span>
+              <span className="text-sm text-gray-700">{t('marketerRegister.marketer')}</span>
             </label>
             <label className="flex items-center space-x-2 cursor-pointer">
               <input
@@ -215,7 +217,7 @@ export default function MarketerRegister() {
                 value="Developer"
                 className="w-4 h-4 text-primary-blue border-gray-300 focus:ring-primary-blue"
               />
-              <span className="text-sm text-gray-700">Developer</span>
+              <span className="text-sm text-gray-700">{t('marketerRegister.developer')}</span>
             </label>
           </div>
           {errors.role && (
@@ -225,14 +227,14 @@ export default function MarketerRegister() {
 
         <div>
           <label htmlFor="officeLocation" className="block text-sm font-semibold text-gray-700 mb-2">
-            Office Location *
+            {t('marketerRegister.officeLocation')}
           </label>
           <input
             {...register('officeLocation')}
             type="text"
             id="officeLocation"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
-            placeholder="Enter your office location"
+            placeholder={t('marketerRegister.officeLocationPlaceholder')}
           />
           {errors.officeLocation && (
             <p className="text-red-600 text-sm mt-1">{errors.officeLocation.message}</p>
@@ -244,13 +246,13 @@ export default function MarketerRegister() {
           disabled={isSubmitting}
           className="w-full px-6 py-3 bg-primary-blue text-white rounded-lg font-semibold hover:scale-105 transition-transform duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? 'Creating Account...' : 'Create Account'}
+          {isSubmitting ? t('marketerRegister.creating') : t('marketerRegister.createButton')}
         </button>
 
         <p className="text-center text-sm text-gray-600">
-          Already have an account?{' '}
+          {t('marketerRegister.haveAccount')}{' '}
           <a href="/login" className="text-primary-blue font-semibold hover:underline">
-            Log in
+            {t('marketerRegister.loginHere')}
           </a>
         </p>
       </form>

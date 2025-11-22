@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/lib/context/AuthContext'
 import { useInterest } from '@/lib/context/InterestContext'
 import { Property, Buyer } from '@/lib/types'
@@ -11,11 +12,14 @@ interface InterestButtonProps {
 }
 
 export default function InterestButton({ property }: InterestButtonProps) {
+  const { t } = useTranslation('properties')
   const navigate = useNavigate()
   const { user } = useAuth()
   const { addInterest, isInterested } = useInterest()
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [showWarningModal, setShowWarningModal] = useState(false)
+  const [warningReasons, setWarningReasons] = useState<string[]>([])
 
   const alreadyInterested = isInterested(property.id)
 
@@ -28,7 +32,7 @@ export default function InterestButton({ property }: InterestButtonProps) {
     if (user.userType !== 'buyer') {
       setMessage({
         type: 'error',
-        text: 'Only buyers can express interest in properties'
+        text: t('interestButton.onlyBuyers')
       })
       setTimeout(() => setMessage(null), 5000)
       return
@@ -37,7 +41,7 @@ export default function InterestButton({ property }: InterestButtonProps) {
     if (alreadyInterested) {
       setMessage({
         type: 'error',
-        text: 'You have already expressed interest in this property'
+        text: t('interestButton.alreadyExpressed')
       })
       setTimeout(() => setMessage(null), 5000)
       return
@@ -51,15 +55,31 @@ export default function InterestButton({ property }: InterestButtonProps) {
     console.log('Matching result:', matchResult)
 
     if (!matchResult.matches) {
-      setMessage({
-        type: 'error',
-        text: `This property doesn't match your preferences: ${matchResult.reasons.join(', ')}`
-      })
+      const reasons = matchResult.reasons.map(reason =>
+        t(`interestButton.mismatchReasons.${reason}`, reason)
+      )
+      setWarningReasons(reasons)
+      setShowWarningModal(true)
       setIsProcessing(false)
-      setTimeout(() => setMessage(null), 7000)
       return
     }
 
+    await processInterest(buyer)
+  }
+
+  const handleProceedAnyway = async () => {
+    setShowWarningModal(false)
+    setIsProcessing(true)
+    const buyer = user as Buyer
+    await processInterest(buyer)
+  }
+
+  const handleCancelWarning = () => {
+    setShowWarningModal(false)
+    setWarningReasons([])
+  }
+
+  const processInterest = async (buyer: Buyer) => {
     try {
       const { data, error } = await supabase
         .from('leads')
@@ -84,7 +104,7 @@ export default function InterestButton({ property }: InterestButtonProps) {
         console.error('Error creating lead:', error)
         setMessage({
           type: 'error',
-          text: 'Failed to record your interest. Please try again.'
+          text: t('interestButton.error')
         })
         setIsProcessing(false)
         setTimeout(() => setMessage(null), 5000)
@@ -95,7 +115,7 @@ export default function InterestButton({ property }: InterestButtonProps) {
 
       setMessage({
         type: 'success',
-        text: 'Success! Your interest has been recorded and the marketer will contact you soon.'
+        text: t('interestButton.success')
       })
       setIsProcessing(false)
       setTimeout(() => setMessage(null), 5000)
@@ -103,7 +123,7 @@ export default function InterestButton({ property }: InterestButtonProps) {
       console.error('Error creating lead:', error)
       setMessage({
         type: 'error',
-        text: 'An error occurred. Please try again.'
+        text: t('interestButton.error')
       })
       setIsProcessing(false)
       setTimeout(() => setMessage(null), 5000)
@@ -115,24 +135,71 @@ export default function InterestButton({ property }: InterestButtonProps) {
       <button
         onClick={handleInterestClick}
         disabled={isProcessing || alreadyInterested}
-        className={`w-full md:w-auto px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 ${
-          alreadyInterested
+        className={`w-full md:w-auto px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 ${alreadyInterested
             ? 'bg-gray-400 text-white cursor-not-allowed'
             : 'bg-primary-blue text-white hover:scale-105'
-        } ${isProcessing ? 'opacity-50 cursor-wait' : ''}`}
+          } ${isProcessing ? 'opacity-50 cursor-wait' : ''}`}
       >
-        {isProcessing ? 'Processing...' : alreadyInterested ? 'Already Interested' : "I'm Interested"}
+        {isProcessing
+          ? t('interestButton.processing')
+          : alreadyInterested
+            ? t('interestButton.alreadyInterested')
+            : t('interestButton.interested')}
       </button>
 
       {message && (
         <div
-          className={`mt-4 p-4 rounded-lg ${
-            message.type === 'success'
+          className={`mt-4 p-4 rounded-lg ${message.type === 'success'
               ? 'bg-green-50 border border-green-200 text-green-800'
               : 'bg-red-50 border border-red-200 text-red-800'
-          }`}
+            }`}
         >
           {message.text}
+        </div>
+      )}
+
+      {/* Warning Modal */}
+      {showWarningModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-8 max-w-md w-full">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              {t('interestButton.mismatchTitle')}
+            </h3>
+
+            <p className="text-gray-700 mb-4">
+              {t('interestButton.validationWarning')}
+            </p>
+
+            <ul className="space-y-2 mb-6">
+              {warningReasons.map((reason, index) => (
+                <li key={index} className="flex items-start gap-2 text-gray-600">
+                  <svg className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                  <span>{reason}</span>
+                </li>
+              ))}
+            </ul>
+
+            <p className="text-gray-700 font-medium mb-6">
+              {t('interestButton.continueQuestion')}
+            </p>
+
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={handleCancelWarning}
+                className="px-6 py-2.5 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition-all hover:scale-105"
+              >
+                {t('interestButton.cancel')}
+              </button>
+              <button
+                onClick={handleProceedAnyway}
+                className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-teal-700 transition-all hover:scale-105"
+              >
+                {t('interestButton.proceed')}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

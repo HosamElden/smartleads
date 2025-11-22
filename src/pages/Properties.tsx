@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import Header from '@/components/Header'
 import PropertyCardNew from '@/components/PropertyCardNew'
 import PropertyFilters, { FilterValues } from '@/components/PropertyFilters'
@@ -8,6 +9,7 @@ import { useAuth } from '@/lib/context/AuthContext'
 import { Buyer, Property } from '@/lib/types'
 
 export default function Properties() {
+  const { t } = useTranslation(['properties', 'common'])
   const { user, isAuthenticated } = useAuth()
   const buyer = isAuthenticated && user?.userType === 'buyer' ? (user as Buyer) : null
   const [searchQuery, setSearchQuery] = useState('')
@@ -140,22 +142,22 @@ export default function Properties() {
           <div className={`mb-6 p-6 rounded-xl border-2 ${getScoreColor(buyer.scoreTier)}`}>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <h2 className="text-lg font-bold mb-1">Welcome back, {buyer.fullName}!</h2>
-                <p className="text-sm opacity-80">Your profile is helping us match you with the best properties</p>
+                <h2 className="text-lg font-bold mb-1">{t('properties:listing.welcomeBack', { name: buyer.fullName })}</h2>
+                <p className="text-sm opacity-80">{t('properties:listing.profileHelping')}</p>
               </div>
               <div className="flex items-center gap-4">
                 <div className="text-center">
                   <div className="text-3xl font-bold">{buyer.score}</div>
-                  <div className="text-xs opacity-80">Lead Score</div>
+                  <div className="text-xs opacity-80">{t('properties:listing.leadScore')}</div>
                 </div>
                 <div className={`px-4 py-2 rounded-full font-semibold text-sm ${getScoreColor(buyer.scoreTier)}`}>
-                  {getScoreEmoji(buyer.scoreTier)} {buyer.scoreTier} Lead
+                  {getScoreEmoji(buyer.scoreTier)} {buyer.scoreTier} {t('properties:listing.lead')}
                 </div>
                 <Link
                   to="/my-interests"
                   className="px-4 py-2 bg-white rounded-lg font-semibold text-sm hover:bg-opacity-90 transition-colors border-2 border-current"
                 >
-                  My Interests
+                  {t('common:header.myInterests')}
                 </Link>
               </div>
             </div>
@@ -163,9 +165,9 @@ export default function Properties() {
         )}
 
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-1">Available Properties</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-1">{t('properties:listing.title')}</h1>
           <p className="text-gray-600 text-sm">
-            Showing {filteredProperties.length} of {filteredProperties.length} properties
+            {t('properties:listing.showing', { count: filteredProperties.length, total: properties.length })}
           </p>
         </div>
 
@@ -177,7 +179,7 @@ export default function Properties() {
               </svg>
               <input
                 type="text"
-                placeholder="Search properties..."
+                placeholder={t('properties:searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue focus:border-transparent"
@@ -190,7 +192,7 @@ export default function Properties() {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
               </svg>
-              Filters
+              {t('properties:filters.title')}
             </button>
           </div>
         </div>
@@ -206,12 +208,12 @@ export default function Properties() {
             <div className="flex justify-center items-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-blue"></div>
             </div>
-            <p className="text-gray-600 mt-4">Loading properties...</p>
+            <p className="text-gray-600 mt-4">{t('common:common.loading')}</p>
           </div>
         ) : filteredProperties.length === 0 ? (
           <div className="bg-white rounded-xl shadow-sm p-12 text-center">
-            <p className="text-gray-600 text-lg">No properties found matching your filters.</p>
-            <p className="text-gray-500 text-sm mt-2">Try adjusting your search criteria.</p>
+            <p className="text-gray-600 text-lg">{t('properties:listing.noProperties')}</p>
+            <p className="text-gray-500 text-sm mt-2">{t('properties:listing.tryAdjusting')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

@@ -1,0 +1,59 @@
+{
+    "hero": {
+        "title": "Find Your Perfect Property with SmartLeads",
+        "subtitle": "The intelligent way to buy and sell properties",
+        "searchLocation": "Location",
+        "searchPrice": "Price Range",
+        "searchType": "Property Type",
+        "searchButton": "Browse Properties",
+        "anyLocation": "Any Location",
+        "anyPrice": "Any Price",
+        "anyType": "Any Type",
+        "priceUnder2M": "Under 2M SAR",
+        "price2MTo5M": "2M - 5M SAR",
+        "price5MTo10M": "5M - 10M SAR",
+        "priceAbove10M": "Above 10M SAR"
+    },
+    "categories": {
+        "title": "Browse by Category",
+        "apartments": "Apartments",
+        "apartmentsCount": "45 listings",
+        "villas": "Villas",
+        "villasCount": "32 listings",
+        "newProjects": "New Projects",
+        "newProjectsCount": "18 listings",
+        "commercial": "Commercial",
+        "commercialCount": "12 listings",
+        "installments": "Installments",
+        "installmentsCount": "28 listings",
+        "resale": "Resale",
+        "resaleCount": "24 listings"
+    },
+    "developers": {
+        "title": "Featured Projects from Top Developers",
+        "seeAll": "See All Projects"
+    },
+    "latestProperties": {
+        "title": "Latest Properties",
+        "subtitle": "Discover our newest listings",
+        "viewAll": "View All Properties",
+        "loading": "Loading properties..."
+    },
+    "whyChooseUs": {
+        "title": "Why Choose Us",
+        "verifiedListings": "Verified Listings",
+        "verifiedListingsDesc": "All properties are verified by our team",
+        "trustedMarketers": "Trusted Marketers",
+        "trustedMarketersDesc": "Work with certified real estate professionals",
+        "easySearch": "Easy Search",
+        "easySearchDesc": "Find your perfect property with smart filters",
+        "securePlatform": "Secure Platform",
+        "securePlatformDesc": "Your data is protected with us"
+    },
+    "cta": {
+        "title": "Register today and get instant access to top property deals",
+        "subtitle": "Join thousands of buyers and marketers already using our platform",
+        "forBuyers": "For Buyers",
+        "forMarketers": "For Marketers"
+    }
+}

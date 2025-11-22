@@ -1,0 +1,70 @@
+{
+    "title": "لوحة التحكم",
+    "nav": {
+        "browseProperties": "تصفح العقارات",
+        "myListings": "عقاراتي",
+        "listings": "العقارات",
+        "leads": "العملاء المحتملون",
+        "addProperty": "إضافة عقار",
+        "logout": "تسجيل الخروج"
+    },
+    "listings": {
+        "title": "عقاراتي",
+        "description": "إدارة قوائم العقارات الخاصة بك",
+        "addNew": "إضافة عقار جديد",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "loading": "جاري تحميل العقارات...",
+        "noProperties": "لا توجد عقارات بعد",
+        "startAdding": "ابدأ بإضافة عقارك الأول"
+    },
+    "leads": {
+        "title": "العملاء المحتملون",
+        "buyer": "المشتري",
+        "property": "العقار",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "noLeads": "لا يوجد عملاء محتملون بعد",
+        "waitForInterest": "انتظر حتى يبدي المشترون اهتماماً بعقاراتك"
+    },
+    "addProperty": {
+        "title": "إضافة عقار جديد",
+        "subtitle": "املأ التفاصيل لإدراج عقار جديد",
+        "basicInfo": "المعلومات الأساسية",
+        "propertyTitle": "عنوان العقار",
+        "propertyType": "نوع العقار",
+        "location": "الموقع",
+        "projectName": "اسم المشروع",
+        "pricing": "السعر والمساحة",
+        "price": "السعر (ريال)",
+        "area": "المساحة (متر مربع)",
+        "bedrooms": "غرف النوم",
+        "bathrooms": "الحمامات",
+        "details": "التفاصيل",
+        "deliveryDate": "تاريخ التسليم",
+        "paymentPlan": "خطة الدفع",
+        "description": "الوصف",
+        "descriptionEn": "الوصف (إنجليزي)",
+        "descriptionAr": "الوصف (عربي)",
+        "images": "صور العقار (واحدة لكل سطر، على الأقل 4)",
+        "imagesHint": "أدخل كل رابط صورة في سطر جديد",
+        "uploadImages": "تحميل الصور",
+        "status": "الحالة",
+        "available": "متاح",
+        "soldOut": "مُباع",
+        "reserved": "محجوز",
+        "saving": "جاري الحفظ...",
+        "addButton": "إضافة عقار",
+        "updateButton": "تحديث العقار",
+        "saveButton": "إضافة عقار",
+        "cancelButton": "إلغاء",
+        "success": "تمت إضافة العقار بنجاح!",
+        "error": "فشل في إضافة العقار"
+    },
+    "editProperty": {
+        "title": "تعديل العقار",
+        "subtitle": "تحديث تفاصيل العقار",
+        "success": "تم تحديث العقار بنجاح!",
+        "error": "فشل في تحديث العقار"
+    }
+}

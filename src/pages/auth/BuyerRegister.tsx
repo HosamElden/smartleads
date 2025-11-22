@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { buyerRegistrationSchema, type BuyerRegistrationInput } from '@/lib/validations/auth'
 import { calculateLeadScore } from '@/lib/scoring/calculateScore'
 import { supabase } from '@/lib/supabase'
@@ -30,6 +31,7 @@ const propertyTypeOptions = [
 ]
 
 export default function BuyerRegister() {
+  const { t } = useTranslation('auth')
   const navigate = useNavigate()
   const { login } = useAuth()
 
@@ -70,13 +72,13 @@ export default function BuyerRegister() {
 
     try {
       if (selectedLocations.length === 0) {
-        setValidationError('Please select at least one location')
+        setValidationError(t('buyerRegister.selectLocation'))
         setIsSubmitting(false)
         return
       }
 
       if (selectedPropertyTypes.length === 0) {
-        setValidationError('Please select at least one property type')
+        setValidationError(t('buyerRegister.selectPropertyType'))
         setIsSubmitting(false)
         return
       }
@@ -104,7 +106,7 @@ export default function BuyerRegister() {
         .maybeSingle()
 
       if (existingEmail) {
-        setValidationError('Email already exists')
+        setValidationError(t('buyerRegister.emailExists'))
         setIsSubmitting(false)
         return
       }
@@ -116,7 +118,7 @@ export default function BuyerRegister() {
         .maybeSingle()
 
       if (existingPhone) {
-        setValidationError('Phone number already exists')
+        setValidationError(t('buyerRegister.phoneExists'))
         setIsSubmitting(false)
         return
       }
@@ -144,7 +146,7 @@ export default function BuyerRegister() {
 
       if (error) {
         console.error('Database error:', error)
-        setValidationError(`Registration failed: ${error.message}`)
+        setValidationError(t('buyerRegister.error', { message: error.message }))
         setIsSubmitting(false)
         return
       }
@@ -170,15 +172,15 @@ export default function BuyerRegister() {
       navigate('/properties')
     } catch (err) {
       console.error('Caught error:', err)
-      setValidationError(`An error occurred: ${err instanceof Error ? err.message : 'Unknown error'}`)
+      setValidationError(t('buyerRegister.unknownError', { message: err instanceof Error ? err.message : t('buyerRegister.unknown') }))
       setIsSubmitting(false)
     }
   }
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">Join SmartLead as a Buyer</h1>
-      <p className="text-gray-600 mb-8">Create your account to start browsing properties</p>
+      <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('buyerRegister.title')}</h1>
+      <p className="text-gray-600 mb-8">{t('buyerRegister.subtitle')}</p>
 
       {validationError && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
@@ -188,18 +190,18 @@ export default function BuyerRegister() {
 
       <form onSubmit={handleSubmit(onSubmit, (errors) => {
         console.log('Form validation errors:', errors)
-        setValidationError('Please fill in all required fields correctly')
+        setValidationError(t('buyerRegister.fillAllFields'))
       })} className="space-y-6">
         <div>
           <label htmlFor="fullName" className="block text-sm font-semibold text-gray-700 mb-2">
-            Full Name
+            {t('buyerRegister.fullName')}
           </label>
           <input
             {...register('fullName')}
             type="text"
             id="fullName"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
-            placeholder="Enter your full name"
+            placeholder={t('buyerRegister.fullNamePlaceholder')}
           />
           {errors.fullName && (
             <p className="text-red-600 text-sm mt-1">{errors.fullName.message}</p>
@@ -208,7 +210,7 @@ export default function BuyerRegister() {
 
         <div>
           <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-            Email
+            {t('buyerRegister.email')}
           </label>
           <input
             {...register('email')}
@@ -224,7 +226,7 @@ export default function BuyerRegister() {
 
         <div>
           <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-            Phone
+            {t('buyerRegister.phone')}
           </label>
           <input
             {...register('phone')}
@@ -240,14 +242,14 @@ export default function BuyerRegister() {
 
         <div>
           <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
-            Password
+            {t('buyerRegister.password')}
           </label>
           <input
             {...register('password')}
             type="password"
             id="password"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
-            placeholder="Min 8 characters"
+            placeholder={t('buyerRegister.passwordPlaceholder')}
           />
           {errors.password && (
             <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
@@ -256,14 +258,14 @@ export default function BuyerRegister() {
 
         <div>
           <label htmlFor="budget" className="block text-sm font-semibold text-gray-700 mb-2">
-            Budget (SAR)
+            {t('buyerRegister.budget')}
           </label>
           <input
             {...register('budget', { valueAsNumber: true })}
             type="number"
             id="budget"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
-            placeholder="Enter your budget"
+            placeholder={t('buyerRegister.budgetPlaceholder')}
           />
           {errors.budget && (
             <p className="text-red-600 text-sm mt-1">{errors.budget.message}</p>
@@ -272,7 +274,7 @@ export default function BuyerRegister() {
 
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-3">
-            Preferred Locations (select at least one)
+            {t('buyerRegister.preferredLocations')}
           </label>
           <div className="grid grid-cols-2 gap-3">
             {locationOptions.map(location => (
@@ -294,7 +296,7 @@ export default function BuyerRegister() {
 
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-3">
-            Property Types (select at least one)
+            {t('buyerRegister.propertyTypes')}
           </label>
           <div className="grid grid-cols-2 gap-3">
             {propertyTypeOptions.map(type => (
@@ -316,7 +318,7 @@ export default function BuyerRegister() {
 
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-3">
-            Buying Intent (optional)
+            {t('buyerRegister.buyingIntent')}
           </label>
           <div className="space-y-2">
             <label className="flex items-center space-x-2 cursor-pointer">
@@ -326,7 +328,7 @@ export default function BuyerRegister() {
                 value="Cash"
                 className="w-4 h-4 text-primary-blue border-gray-300 focus:ring-primary-blue"
               />
-              <span className="text-sm text-gray-700">Cash</span>
+              <span className="text-sm text-gray-700">{t('buyerRegister.cash')}</span>
             </label>
             <label className="flex items-center space-x-2 cursor-pointer">
               <input
@@ -335,7 +337,7 @@ export default function BuyerRegister() {
                 value="Installment"
                 className="w-4 h-4 text-primary-blue border-gray-300 focus:ring-primary-blue"
               />
-              <span className="text-sm text-gray-700">Installment</span>
+              <span className="text-sm text-gray-700">{t('buyerRegister.installment')}</span>
             </label>
             <label className="flex items-center space-x-2 cursor-pointer">
               <input
@@ -344,7 +346,7 @@ export default function BuyerRegister() {
                 value="Mortgage"
                 className="w-4 h-4 text-primary-blue border-gray-300 focus:ring-primary-blue"
               />
-              <span className="text-sm text-gray-700">Mortgage</span>
+              <span className="text-sm text-gray-700">{t('buyerRegister.mortgage')}</span>
             </label>
             <label className="flex items-center space-x-2 cursor-pointer">
               <input
@@ -353,7 +355,7 @@ export default function BuyerRegister() {
                 value=""
                 className="w-4 h-4 text-primary-blue border-gray-300 focus:ring-primary-blue"
               />
-              <span className="text-sm text-gray-700">Not Sure</span>
+              <span className="text-sm text-gray-700">{t('buyerRegister.notSure')}</span>
             </label>
           </div>
         </div>
@@ -363,13 +365,13 @@ export default function BuyerRegister() {
           disabled={isSubmitting}
           className="w-full px-6 py-3 bg-primary-blue text-white rounded-lg font-semibold hover:scale-105 transition-transform duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? 'Creating Account...' : 'Create Account'}
+          {isSubmitting ? t('buyerRegister.creating') : t('buyerRegister.createButton')}
         </button>
 
         <p className="text-center text-sm text-gray-600">
-          Already have an account?{' '}
+          {t('buyerRegister.haveAccount')}{' '}
           <a href="/login" className="text-primary-blue font-semibold hover:underline">
-            Log in
+            {t('buyerRegister.loginHere')}
           </a>
         </p>
       </form>

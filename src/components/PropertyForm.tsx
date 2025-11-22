@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { useTranslation } from 'react-i18next'
 import { Property } from '@/lib/types'
 
 const propertySchema = z.object({
@@ -28,6 +29,7 @@ interface PropertyFormProps {
 }
 
 export default function PropertyForm({ property, onSubmit, isSubmitting }: PropertyFormProps) {
+  const { t } = useTranslation(['dashboard', 'common'])
   const {
     register,
     handleSubmit,
@@ -55,12 +57,12 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Title *
+          {t('dashboard:addProperty.propertyTitle')}
         </label>
         <input
           {...register('title')}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
-          placeholder="e.g., Luxury Apartment in New Cairo"
+          placeholder={t('dashboard:addProperty.propertyTitle')}
         />
         {errors.title && <p className="text-red-600 text-sm mt-1">{errors.title.message}</p>}
       </div>
@@ -68,25 +70,25 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
       <div className="grid md:grid-cols-2 gap-6">
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Type *
+            {t('dashboard:addProperty.propertyType')}
           </label>
           <select
             {...register('type')}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
           >
-            <option value="">Select type</option>
-            <option value="Apartment">Apartment</option>
-            <option value="Villa">Villa</option>
-            <option value="Townhouse">Townhouse</option>
-            <option value="Duplex">Duplex</option>
-            <option value="Commercial">Commercial</option>
+            <option value="">{t('common:select')}</option>
+            <option value="Apartment">{t('common:propertyTypes.apartment')}</option>
+            <option value="Villa">{t('common:propertyTypes.villa')}</option>
+            <option value="Townhouse">{t('common:propertyTypes.townhouse')}</option>
+            <option value="Duplex">{t('common:propertyTypes.duplex')}</option>
+            <option value="Commercial">{t('common:propertyTypes.commercial')}</option>
           </select>
           {errors.type && <p className="text-red-600 text-sm mt-1">{errors.type.message}</p>}
         </div>
 
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Location *
+            {t('dashboard:addProperty.location')}
           </label>
           <input
             {...register('location')}
@@ -99,7 +101,7 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
 
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Project Name (Optional)
+          {t('dashboard:addProperty.projectName')}
         </label>
         <input
           {...register('projectName')}
@@ -111,7 +113,7 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
       <div className="grid md:grid-cols-2 gap-6">
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Price (SAR) *
+            {t('dashboard:addProperty.price')}
           </label>
           <input
             type="number"
@@ -124,7 +126,7 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
 
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Area (m²) *
+            {t('dashboard:addProperty.area')}
           </label>
           <input
             type="number"
@@ -139,7 +141,7 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
       <div className="grid md:grid-cols-2 gap-6">
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Bedrooms *
+            {t('dashboard:addProperty.bedrooms')}
           </label>
           <input
             type="number"
@@ -152,7 +154,7 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
 
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Bathrooms *
+            {t('dashboard:addProperty.bathrooms')}
           </label>
           <input
             type="number"
@@ -167,7 +169,7 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
       <div className="grid md:grid-cols-2 gap-6">
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Delivery Date *
+            {t('dashboard:addProperty.deliveryDate')}
           </label>
           <input
             type="date"
@@ -179,16 +181,16 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
 
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Status *
+            {t('dashboard:addProperty.status')}
           </label>
           <select
             {...register('status')}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
           >
-            <option value="">Select status</option>
-            <option value="Available">Available</option>
-            <option value="Sold Out">Sold Out</option>
-            <option value="Reserved">Reserved</option>
+            <option value="">{t('common:select')}</option>
+            <option value="Available">{t('dashboard:addProperty.available')}</option>
+            <option value="Sold Out">{t('dashboard:addProperty.soldOut')}</option>
+            <option value="Reserved">{t('dashboard:addProperty.reserved')}</option>
           </select>
           {errors.status && <p className="text-red-600 text-sm mt-1">{errors.status.message}</p>}
         </div>
@@ -196,7 +198,7 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
 
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Payment Plan *
+          {t('dashboard:addProperty.paymentPlan')}
         </label>
         <input
           {...register('paymentPlan')}
@@ -208,7 +210,7 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
 
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Description *
+          {t('dashboard:addProperty.description')}
         </label>
         <textarea
           {...register('description')}
@@ -221,7 +223,7 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
 
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Image URLs * (One per line, min 4)
+          {t('dashboard:addProperty.images')}
         </label>
         <textarea
           {...register('images')}
@@ -229,7 +231,7 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
           placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg&#10;https://example.com/image3.jpg&#10;https://example.com/image4.jpg"
         />
-        <p className="text-sm text-gray-600 mt-1">Enter each image URL on a new line</p>
+        <p className="text-sm text-gray-600 mt-1">{t('dashboard:addProperty.imagesHint')}</p>
         {errors.images && <p className="text-red-600 text-sm mt-1">{errors.images.message}</p>}
       </div>
 
@@ -237,11 +239,10 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`px-8 py-3 bg-primary-blue text-white rounded-lg font-semibold hover:scale-105 transition-transform duration-200 ${
-            isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
+          className={`px-8 py-3 bg-primary-blue text-white rounded-lg font-semibold hover:scale-105 transition-transform duration-200 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
         >
-          {isSubmitting ? 'Saving...' : property ? 'Update Property' : 'Add Property'}
+          {isSubmitting ? t('dashboard:addProperty.saving') : property ? t('dashboard:addProperty.updateButton') : t('dashboard:addProperty.addButton')}
         </button>
       </div>
     </form>

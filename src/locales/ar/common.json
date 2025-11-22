@@ -1,0 +1,76 @@
+{
+    "header": {
+        "brand": "سمارت ليد",
+        "home": "الرئيسية",
+        "properties": "العقارات",
+        "gallery": "معرض الصور",
+        "myInterests": "اهتماماتي",
+        "dashboard": "لوحة التحكم",
+        "login": "تسجيل الدخول",
+        "logout": "تسجيل الخروج"
+    },
+    "footer": {
+        "brand": "سمارت ليد",
+        "tagline": "منصتك الموثوقة للعثور على العقار المثالي في مصر",
+        "about": "عن الشركة",
+        "aboutUs": "من نحن",
+        "ourTeam": "فريقنا",
+        "careers": "الوظائف",
+        "press": "الصحافة",
+        "support": "الدعم",
+        "contactUs": "اتصل بنا",
+        "faqs": "الأسئلة الشائعة",
+        "helpCenter": "مركز المساعدة",
+        "feedback": "التعليقات",
+        "legal": "القانونية",
+        "privacyPolicy": "سياسة الخصوصية",
+        "termsOfService": "شروط الخدمة",
+        "cookiePolicy": "سياسة ملفات تعريف الارتباط",
+        "disclaimer": "إخلاء المسؤولية",
+        "copyright": "© 2024 سمارت ليد. جميع الحقوق محفوظة."
+    },
+    "buttons": {
+        "submit": "إرسال",
+        "cancel": "إلغاء",
+        "save": "حفظ",
+        "delete": "حذف",
+        "edit": "تعديل",
+        "view": "عرض",
+        "close": "إغلاق",
+        "back": "رجوع",
+        "next": "التالي",
+        "search": "بحث",
+        "filter": "تصفية",
+        "clear": "مسح",
+        "apply": "تطبيق",
+        "reset": "إعادة تعيين"
+    },
+    "common": {
+        "loading": "جاري التحميل...",
+        "error": "خطأ",
+        "success": "نجاح",
+        "noResults": "لا توجد نتائج",
+        "or": "أو",
+        "and": "و",
+        "required": "مطلوب",
+        "optional": "اختياري",
+        "yes": "نعم",
+        "no": "لا",
+        "currency": "ريال",
+        "select": "اختر النوع"
+    },
+    "propertyTypes": {
+        "apartment": "شقة",
+        "villa": "فيلا",
+        "townhouse": "تاون هاوس",
+        "duplex": "دوبلكس",
+        "commercial": "تجاري"
+    },
+    "locations": {
+        "newCairo": "القاهرة الجديدة",
+        "nac": "العاصمة الإدارية",
+        "sixthOctober": "6 أكتوبر",
+        "sheikhZayed": "الشيخ زايد",
+        "northCoast": "الساحل الشمالي"
+    }
+}
