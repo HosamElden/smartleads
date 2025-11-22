@@ -10,6 +10,7 @@ import Home from './pages/Home'
 import Properties from './pages/Properties'
 import PropertyDetails from './pages/PropertyDetails'
 import MyInterests from './pages/MyInterests'
+import Gallery from './pages/Gallery'
 import DashboardLayout from './pages/dashboard/DashboardLayout'
 import Dashboard from './pages/dashboard/Dashboard'
 import Listings from './pages/dashboard/Listings'
@@ -26,6 +27,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/properties" element={<Properties />} />
           <Route path="/properties/:id" element={<PropertyDetails />} />
+          <Route path="/gallery" element={<Gallery />} />
           <Route path="/my-interests" element={<MyInterests />} />
           <Route element={<AuthLayout />}>
             <Route path="/register/buyer" element={<BuyerRegister />} />
