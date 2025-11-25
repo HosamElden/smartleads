@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface FilterValues {
   minPrice: number
@@ -37,6 +38,7 @@ const propertyTypeOptions = [
 ]
 
 export default function PropertyFilters({ onFilterChange }: PropertyFiltersProps) {
+  const { t } = useTranslation(['properties', 'common'])
   const [filters, setFilters] = useState<FilterValues>({
     minPrice: 0,
     maxPrice: 10000000,
@@ -52,12 +54,50 @@ export default function PropertyFilters({ onFilterChange }: PropertyFiltersProps
     onFilterChange(updated)
   }
 
+  const getLocationLabel = (location: string) => {
+    switch (location) {
+      case 'All Locations':
+        return t('properties:filters.allLocations')
+      case 'New Cairo':
+        return t('common:locations.newCairo')
+      case 'NAC':
+        return t('common:locations.nac')
+      case '6th October':
+        return t('common:locations.sixthOctober')
+      case 'Sheikh Zayed':
+        return t('common:locations.sheikhZayed')
+      case 'North Coast':
+        return t('common:locations.northCoast')
+      default:
+        return location
+    }
+  }
+
+  const getPropertyTypeLabel = (type: string) => {
+    switch (type) {
+      case 'All Types':
+        return t('properties:filters.allTypes')
+      case 'Apartment':
+        return t('common:propertyTypes.apartment')
+      case 'Villa':
+        return t('common:propertyTypes.villa')
+      case 'Townhouse':
+        return t('common:propertyTypes.townhouse')
+      case 'Duplex':
+        return t('common:propertyTypes.duplex')
+      case 'Commercial':
+        return t('common:propertyTypes.commercial')
+      default:
+        return type
+    }
+  }
+
   return (
     <div className="bg-white rounded-xl shadow-sm p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Location
+            {t('properties:filters.location')}
           </label>
           <select
             value={filters.location}
@@ -66,7 +106,7 @@ export default function PropertyFilters({ onFilterChange }: PropertyFiltersProps
           >
             {locationOptions.map((location) => (
               <option key={location} value={location}>
-                {location}
+                {getLocationLabel(location)}
               </option>
             ))}
           </select>
@@ -74,7 +114,7 @@ export default function PropertyFilters({ onFilterChange }: PropertyFiltersProps
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Property Type
+            {t('properties:filters.propertyType')}
           </label>
           <select
             value={filters.propertyType}
@@ -83,7 +123,7 @@ export default function PropertyFilters({ onFilterChange }: PropertyFiltersProps
           >
             {propertyTypeOptions.map((type) => (
               <option key={type} value={type}>
-                {type}
+                {getPropertyTypeLabel(type)}
               </option>
             ))}
           </select>
@@ -91,7 +131,7 @@ export default function PropertyFilters({ onFilterChange }: PropertyFiltersProps
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Min Price (SAR)
+            {t('properties:filters.minPrice')}
           </label>
           <input
             type="number"
@@ -104,7 +144,7 @@ export default function PropertyFilters({ onFilterChange }: PropertyFiltersProps
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Max Price (SAR)
+            {t('properties:filters.maxPrice')}
           </label>
           <input
             type="number"
@@ -117,14 +157,14 @@ export default function PropertyFilters({ onFilterChange }: PropertyFiltersProps
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Min Bedrooms
+            {t('properties:filters.minBedrooms')}
           </label>
           <select
             value={filters.bedrooms}
             onChange={(e) => handleFilterChange({ bedrooms: e.target.value })}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent bg-white"
           >
-            <option value="Any">Any</option>
+            <option value="Any">{t('properties:filters.any')}</option>
             <option value="1">1+</option>
             <option value="2">2+</option>
             <option value="3">3+</option>
@@ -135,7 +175,7 @@ export default function PropertyFilters({ onFilterChange }: PropertyFiltersProps
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Min Area (m²)
+            {t('properties:filters.minArea')}
           </label>
           <input
             type="number"
