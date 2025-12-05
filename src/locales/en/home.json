@@ -1,58 +1,46 @@
 {
+    "title": "Properties",
+    "searchPlaceholder": "Search for properties...",
     "hero": {
-        "title": "Find Your Perfect Property with SmartLeads",
+        "title": "Find Your Dream Home",
         "subtitle": "The intelligent way to buy and sell properties",
-        "searchLocation": "Location",
-        "searchPrice": "Price Range",
-        "searchType": "Property Type",
-        "searchButton": "Browse Properties",
+        "searchPlaceholder": "Enter an address, neighborhood, city, or ZIP code",
+        "searchButton": "Search",
+        "location": "Location",
+        "propertyType": "Property Type",
+        "search": "Search",
         "anyLocation": "Any Location",
-        "anyPrice": "Any Price",
-        "anyType": "Any Type",
-        "priceUnder2M": "Under 2M SAR",
-        "price2MTo5M": "2M - 5M SAR",
-        "price5MTo10M": "5M - 10M SAR",
-        "priceAbove10M": "Above 10M SAR"
+        "anyType": "Any Type"
     },
-    "categories": {
-        "title": "Browse by Category",
+    "featuredProperties": "Featured Properties",
+    "featuredPropertiesDesc": "Check out our latest and most exclusive properties",
+    "specialOffers": "Special Offers",
+    "specialOffersDesc": "Exclusive deals and limited-time offers",
+    "popularAreas": "Popular Areas",
+    "popularAreasDesc": "Explore properties in the most sought-after locations",
+    "exploreLocation": "Explore properties",
+    "featured": "Featured",
+    "tabs": {
+        "all": "All",
         "apartments": "Apartments",
-        "apartmentsCount": "45 listings",
-        "villas": "Villas",
-        "villasCount": "32 listings",
-        "newProjects": "New Projects",
-        "newProjectsCount": "18 listings",
-        "commercial": "Commercial",
-        "commercialCount": "12 listings",
-        "installments": "Installments",
-        "installmentsCount": "28 listings",
-        "resale": "Resale",
-        "resaleCount": "24 listings"
+        "villas": "Villas"
     },
-    "developers": {
-        "title": "Featured Projects from Top Developers",
-        "seeAll": "See All Projects"
-    },
-    "latestProperties": {
-        "title": "Latest Properties",
-        "subtitle": "Discover our newest listings",
-        "viewAll": "View All Properties",
-        "loading": "Loading properties..."
-    },
+    "latestProperties": "Latest Properties",
+    "latestPropertiesDesc": "Freshly added properties for you",
+    "viewAllProperties": "View All Properties",
     "whyChooseUs": {
         "title": "Why Choose Us",
+        "subtitle": "We provide the best service in the market",
         "verifiedListings": "Verified Listings",
-        "verifiedListingsDesc": "All properties are verified by our team",
-        "trustedMarketers": "Trusted Marketers",
-        "trustedMarketersDesc": "Work with certified real estate professionals",
+        "verifiedListingsDesc": "All our listings are verified for authenticity",
         "easySearch": "Easy Search",
-        "easySearchDesc": "Find your perfect property with smart filters",
+        "easySearchDesc": "Find your dream property with our advanced search",
         "securePlatform": "Secure Platform",
-        "securePlatformDesc": "Your data is protected with us"
+        "securePlatformDesc": "Your data and transactions are always secure"
     },
     "cta": {
-        "title": "Register today and get instant access to top property deals",
-        "subtitle": "Join thousands of buyers and marketers already using our platform",
+        "title": "Ready to get started?",
+        "subtitle": "Join thousands of satisfied users today",
         "forBuyers": "For Buyers",
         "forMarketers": "For Marketers"
     }

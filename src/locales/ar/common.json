@@ -1,12 +1,16 @@
 {
     "header": {
-        "brand": "سمارت ليد",
+        "brand": "سمارت ليدز",
         "home": "الرئيسية",
         "properties": "العقارات",
+        "sell": "بيع",
+        "rent": "ايجار",
+        "agents": "الوكلاء",
         "gallery": "معرض الصور",
         "myInterests": "اهتماماتي",
         "dashboard": "لوحة التحكم",
         "login": "تسجيل الدخول",
+        "signUp": "إنشاء حساب",
         "logout": "تسجيل الخروج"
     },
     "footer": {

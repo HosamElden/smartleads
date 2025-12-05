@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { loginSchema, type LoginInput } from '@/lib/validations/auth'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/context/AuthContext'
+import { userApi, buyerApi, marketerApi } from '@/lib/api'
 
 export default function Login() {
   const { t } = useTranslation('auth')
@@ -31,6 +32,84 @@ export default function Login() {
     try {
       const isEmail = data.emailOrPhone.includes('@')
 
+      // ========================================
+      // NEW FLOW: Check users table first
+      // ========================================
+      if (isEmail) {
+        const { data: user, error: userError } = await userApi.getUserByEmail(data.emailOrPhone)
+
+        if (user) {
+          console.log('User found in users table, verifying password...')
+
+          // Verify password using bcrypt
+          const isPasswordValid = await userApi.verifyPassword(data.password, user.password)
+
+          if (!isPasswordValid) {
+            setValidationError(t('login.invalidCredentials'))
+            setIsSubmitting(false)
+            return
+          }
+
+          // Password is correct, check if profile is complete
+          if (user.userType === 'buyer') {
+            const { data: buyer } = await buyerApi.getBuyerByUserId(user.id)
+
+            if (!buyer) {
+              // Profile not complete, redirect to complete it
+              console.log('Buyer profile not complete, redirecting...')
+              sessionStorage.setItem('registrationUser', JSON.stringify({
+                id: user.id,
+                email: user.email,
+                userType: user.userType
+              }))
+              navigate('/complete-profile')
+              return
+            }
+
+            // Profile complete, login
+            console.log('Buyer profile complete, logging in...')
+            await userApi.updateLastLogin(user.id)
+            login({
+              ...buyer,
+              userType: 'buyer'
+            })
+            navigate('/properties')
+            return
+
+          } else if (user.userType === 'marketer') {
+            const { data: marketer } = await marketerApi.getMarketerByUserId(user.id)
+
+            if (!marketer) {
+              // Profile not complete
+              console.log('Marketer profile not complete, redirecting...')
+              sessionStorage.setItem('registrationUser', JSON.stringify({
+                id: user.id,
+                email: user.email,
+                userType: user.userType
+              }))
+              navigate('/complete-profile')
+              return
+            }
+
+            // Profile complete, login
+            console.log('Marketer profile complete, logging in...')
+            await userApi.updateLastLogin(user.id)
+            login({
+              ...marketer,
+              userType: 'marketer'
+            })
+            navigate('/dashboard/listings')
+            return
+          }
+        }
+      }
+
+      // ========================================
+      // OLD FLOW: Fallback for existing users
+      // (Backwards compatibility)
+      // ========================================
+      console.log('User not found in users table, trying old flow...')
+
       const { data: buyer } = await supabase
         .from('buyers')
         .select('*')
@@ -39,7 +118,7 @@ export default function Login() {
         .maybeSingle()
 
       if (buyer) {
-        console.log('Buyer found, logging in...')
+        console.log('Buyer found (old flow), logging in...')
         login({
           id: buyer.id,
           userType: 'buyer',
@@ -67,7 +146,7 @@ export default function Login() {
         .maybeSingle()
 
       if (marketer) {
-        console.log('Marketer found, logging in...')
+        console.log('Marketer found (old flow), logging in...')
         login({
           id: marketer.id,
           userType: 'marketer',
@@ -84,6 +163,7 @@ export default function Login() {
         return
       }
 
+      // No user found in either flow
       setValidationError(t('login.invalidCredentials'))
       setIsSubmitting(false)
     } catch (err) {
@@ -151,11 +231,11 @@ export default function Login() {
         <div className="text-center space-y-2">
           <p className="text-sm text-gray-600">
             {t('login.noAccount')}{' '}
-            <a href="/register/buyer" className="text-primary-blue font-semibold hover:underline">
+            <a href="/auth/register/buyer" className="text-primary-blue font-semibold hover:underline">
               {t('login.registerBuyer')}
             </a>
             {' '}{t('login.or')}{' '}
-            <a href="/register/marketer" className="text-primary-blue font-semibold hover:underline">
+            <a href="/auth/register/marketer" className="text-primary-blue font-semibold hover:underline">
               {t('login.registerMarketer')}
             </a>
           </p>

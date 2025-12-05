@@ -13,14 +13,19 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | null>(() => {
+    const savedUser = localStorage.getItem('smartleads_user')
+    return savedUser ? JSON.parse(savedUser) : null
+  })
 
   const login = (user: User) => {
     setUser(user)
+    localStorage.setItem('smartleads_user', JSON.stringify(user))
   }
 
   const logout = () => {
     setUser(null)
+    localStorage.removeItem('smartleads_user')
   }
 
   const isAuthenticated = !!user

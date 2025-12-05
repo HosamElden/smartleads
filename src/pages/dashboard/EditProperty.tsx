@@ -34,13 +34,19 @@ export default function EditProperty() {
       if (error) throw error
 
       if (data) {
+        // Fetch amenities
+        const { data: amenitiesData } = await supabase
+          .from('property_amenities')
+          .select('*')
+          .eq('property_id', data.id)
+
         const formattedProperty: Property = {
           id: data.id,
           marketerId: data.marketer_id,
           title: data.title,
           type: data.type,
           location: data.location,
-          projectName: data.project_name,
+          projectName: data.project_name || '',
           price: Number(data.price),
           area: Number(data.area),
           bedrooms: data.bedrooms,
@@ -51,7 +57,23 @@ export default function EditProperty() {
           description: data.description,
           status: data.status,
           createdAt: new Date(data.created_at),
-          updatedAt: new Date(data.updated_at)
+          updatedAt: new Date(data.updated_at),
+          // NEW FIELDS
+          projectId: data.project_id,
+          offerTypeId: data.offer_type_id,
+          providerName: data.provider_name,
+          furnished: data.furnished,
+          ownershipId: data.ownership_id,
+          locationLabel: data.location_label,
+          locationMapUrl: data.location_map_url,
+          isVerified: data.is_verified,
+          detailedDescription: data.detailed_description,
+          amenities: amenitiesData ? amenitiesData.map(a => ({
+            id: a.id,
+            propertyId: a.property_id,
+            label: a.label,
+            createdAt: new Date(a.created_at)
+          })) : []
         }
         setProperty(formattedProperty)
       }
@@ -85,7 +107,16 @@ export default function EditProperty() {
         images: imageUrls,
         description: data.description,
         status: data.status,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
+        // NEW FIELDS
+        project_id: data.projectId || null,
+        offer_type_id: data.offerTypeId || null,
+        provider_name: data.providerName || null,
+        furnished: data.furnished || false,
+        ownership_id: data.ownershipId || null,
+        location_label: data.locationLabel || null,
+        location_map_url: data.locationMapUrl || null,
+        detailed_description: data.detailedDescription || null
       }
 
       const { error } = await supabase
@@ -95,6 +126,32 @@ export default function EditProperty() {
         .eq('marketer_id', user?.id)
 
       if (error) throw error
+
+      // Update amenities: delete old ones and insert new ones
+      if (data.amenities !== undefined) {
+        // Delete existing amenities
+        await supabase
+          .from('property_amenities')
+          .delete()
+          .eq('property_id', id)
+
+        // Insert new amenities
+        const amenitiesList = data.amenities
+          .split(',')
+          .map((a: string) => a.trim())
+          .filter((a: string) => a)
+
+        if (amenitiesList.length > 0) {
+          const amenitiesData = amenitiesList.map((label: string) => ({
+            property_id: id,
+            label
+          }))
+
+          await supabase
+            .from('property_amenities')
+            .insert(amenitiesData)
+        }
+      }
 
       console.log('Property updated successfully')
       setSuccessMessage('Property updated successfully!')

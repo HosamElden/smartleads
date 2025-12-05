@@ -1,19 +1,16 @@
 {
     "hero": {
-        "title": "اعثر على عقارك المثالي مع سمارت ليدز",
-        "subtitle": "الطريقة الذكية لشراء وبيع العقارات",
-        "searchLocation": "الموقع",
-        "searchPrice": "نطاق السعر",
-        "searchType": "نوع العقار",
-        "searchButton": "تصفح العقارات",
+        "title": "اعثر على منزل أحلامك",
+        "subtitle": "ابحث طريقة اسرع وبيع العقارات",
+        "searchPlaceholder": "ادخل عنوان او حي او مدينة او رمز بريدي",
+        "searchButton": "بحث",
+        "location": "الموقع",
+        "propertyType": "نوع العقار",
+        "search": "بحث",
         "anyLocation": "أي موقع",
-        "anyPrice": "أي سعر",
-        "anyType": "أي نوع",
-        "priceUnder2M": "أقل من 2 مليون ريال",
-        "price2MTo5M": "2 - 5 مليون ريال",
-        "price5MTo10M": "5 - 10 مليون ريال",
-        "priceAbove10M": "أكثر من 10 مليون ريال"
+        "anyType": "أي نوع"
     },
+    "featuredProperties": "العقارات المميزة",
     "categories": {
         "title": "تصفح حسب الفئة",
         "apartments": "شقق",
@@ -41,6 +38,7 @@
     },
     "whyChooseUs": {
         "title": "لماذا تختارنا",
+        "subtitle": "نقدم أفضل خدمة في السوق",
         "verifiedListings": "إعلانات موثقة",
         "verifiedListingsDesc": "جميع العقارات موثقة من قبل فريقنا",
         "trustedMarketers": "مسوقون موثوقون",

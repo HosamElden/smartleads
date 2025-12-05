@@ -1,18 +1,19 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import Header from '@/components/Header'
+import Hero from '@/components/Hero'
+import SpecialOffers from '@/components/SpecialOffers'
+import PopularAreas from '@/components/PopularAreas'
 import PropertyCardNew from '@/components/PropertyCardNew'
 import { supabase } from '@/lib/supabase'
 import { Property } from '@/lib/types'
 
 export default function Home() {
-  const { t } = useTranslation(['home', 'common'])
-  const [searchLocation, setSearchLocation] = useState('')
-  const [searchPrice, setSearchPrice] = useState('')
-  const [searchType, setSearchType] = useState('')
+  const { t, i18n } = useTranslation(['home', 'common'])
+  const isArabic = i18n.language === 'ar'
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<'all' | 'Apartment' | 'Villa'>('all')
 
   useEffect(() => {
     fetchProperties()
@@ -26,7 +27,7 @@ export default function Home() {
         .select('*')
         .eq('status', 'Available')
         .order('created_at', { ascending: false })
-        .limit(6)
+        .limit(20)
 
       if (error) throw error
 
@@ -58,251 +59,92 @@ export default function Home() {
     }
   }
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    window.location.href = '/properties'
+  // Filter properties based on active tab
+  const getFeaturedProperties = () => {
+    let filtered = properties
+    if (activeTab !== 'all') {
+      filtered = properties.filter(p => p.type === activeTab)
+    }
+    return filtered.slice(0, 6)
   }
+
+  const featuredProperties = getFeaturedProperties()
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
-      <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-teal-600 text-white py-24 px-4">
-        <div className="absolute inset-0 bg-black opacity-10"></div>
-        <div className="relative max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              {t('home:hero.title')}
-            </h1>
-            <p className="text-xl md:text-2xl text-blue-100 mb-8">
-              {t('home:hero.subtitle')}
+      <Hero />
+
+      {/* Featured Properties with Tabs */}
+      <section className="py-16 px-4 bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12 animate-fadeIn">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+              {t('home:featuredProperties')}
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto mb-8">
+              {t('home:featuredPropertiesDesc')}
             </p>
-          </div>
 
-          <form onSubmit={handleSearch} className="bg-white rounded-xl shadow-2xl p-6 max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  {t('home:hero.searchLocation')}
-                </label>
-                <select
-                  value={searchLocation}
-                  onChange={(e) => setSearchLocation(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent text-gray-900"
-                >
-                  <option value="">{t('home:hero.anyLocation')}</option>
-                  <option value="new-cairo">{t('common:locations.newCairo')}</option>
-                  <option value="nac">{t('common:locations.nac')}</option>
-                  <option value="6th-october">{t('common:locations.sixthOctober')}</option>
-                  <option value="sheikh-zayed">{t('common:locations.sheikhZayed')}</option>
-                  <option value="north-coast">{t('common:locations.northCoast')}</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  {t('home:hero.searchPrice')}
-                </label>
-                <select
-                  value={searchPrice}
-                  onChange={(e) => setSearchPrice(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent text-gray-900"
-                >
-                  <option value="">{t('home:hero.anyPrice')}</option>
-                  <option value="0-2000000">{t('home:hero.priceUnder2M')}</option>
-                  <option value="2000000-5000000">{t('home:hero.price2MTo5M')}</option>
-                  <option value="5000000-10000000">{t('home:hero.price5MTo10M')}</option>
-                  <option value="10000000-">{t('home:hero.priceAbove10M')}</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  {t('home:hero.searchType')}
-                </label>
-                <select
-                  value={searchType}
-                  onChange={(e) => setSearchType(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent text-gray-900"
-                >
-                  <option value="">{t('home:hero.anyType')}</option>
-                  <option value="apartment">{t('common:propertyTypes.apartment')}</option>
-                  <option value="villa">{t('common:propertyTypes.villa')}</option>
-                  <option value="townhouse">{t('common:propertyTypes.townhouse')}</option>
-                  <option value="duplex">{t('common:propertyTypes.duplex')}</option>
-                  <option value="commercial">{t('common:propertyTypes.commercial')}</option>
-                </select>
-              </div>
-
-              <div className="flex items-end">
+            {/* Tabs */}
+            <div className="inline-flex bg-white p-2 rounded-full shadow-md gap-1">
+              {(['all', 'Apartment', 'Villa'] as const).map((tab) => (
                 <button
-                  type="submit"
-                  className="w-full px-6 py-3 bg-primary-blue text-white rounded-lg font-semibold hover:scale-105 transition-transform duration-200"
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-6 py-3 rounded-full font-semibold transition-all ${
+                    activeTab === tab
+                      ? 'bg-primary text-white shadow-md'
+                      : 'text-gray-600 hover:text-primary'
+                  }`}
                 >
-                  {t('home:hero.searchButton')}
+                  {tab === 'all' ? t('home:tabs.all') : 
+                   tab === 'Apartment' ? t('home:tabs.apartments') : 
+                   t('home:tabs.villas')}
                 </button>
-              </div>
+              ))}
             </div>
-          </form>
-        </div>
-      </section>
-
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-2">{t('home:categories.title')}</h2>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <Link
-              to="/properties"
-              className="bg-gray-50 rounded-xl p-6 hover:bg-gray-100 transition-colors text-center group"
-            >
-              <div className="w-16 h-16 mx-auto mb-4 text-gray-600 group-hover:text-primary-blue transition-colors">
-                <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-1">{t('home:categories.apartments')}</h3>
-              <p className="text-sm text-gray-500">{t('home:categories.apartmentsCount')}</p>
-            </Link>
-
-            <Link
-              to="/properties"
-              className="bg-gray-50 rounded-xl p-6 hover:bg-gray-100 transition-colors text-center group"
-            >
-              <div className="w-16 h-16 mx-auto mb-4 text-gray-600 group-hover:text-primary-blue transition-colors">
-                <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-1">{t('home:categories.villas')}</h3>
-              <p className="text-sm text-gray-500">{t('home:categories.villasCount')}</p>
-            </Link>
-
-            <Link
-              to="/properties"
-              className="bg-gray-50 rounded-xl p-6 hover:bg-gray-100 transition-colors text-center group"
-            >
-              <div className="w-16 h-16 mx-auto mb-4 text-gray-600 group-hover:text-primary-blue transition-colors">
-                <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-1">{t('home:categories.newProjects')}</h3>
-              <p className="text-sm text-gray-500">{t('home:categories.newProjectsCount')}</p>
-            </Link>
-
-            <Link
-              to="/properties"
-              className="bg-gray-50 rounded-xl p-6 hover:bg-gray-100 transition-colors text-center group"
-            >
-              <div className="w-16 h-16 mx-auto mb-4 text-gray-600 group-hover:text-primary-blue transition-colors">
-                <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-1">{t('home:categories.commercial')}</h3>
-              <p className="text-sm text-gray-500">{t('home:categories.commercialCount')}</p>
-            </Link>
-
-            <Link
-              to="/properties"
-              className="bg-gray-50 rounded-xl p-6 hover:bg-gray-100 transition-colors text-center group"
-            >
-              <div className="w-16 h-16 mx-auto mb-4 text-gray-600 group-hover:text-primary-blue transition-colors">
-                <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-1">{t('home:categories.installments')}</h3>
-              <p className="text-sm text-gray-500">{t('home:categories.installmentsCount')}</p>
-            </Link>
-
-            <Link
-              to="/properties"
-              className="bg-gray-50 rounded-xl p-6 hover:bg-gray-100 transition-colors text-center group"
-            >
-              <div className="w-16 h-16 mx-auto mb-4 text-gray-600 group-hover:text-primary-blue transition-colors">
-                <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-1">{t('home:categories.resale')}</h3>
-              <p className="text-sm text-gray-500">{t('home:categories.resaleCount')}</p>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 px-4 bg-gradient-to-r from-blue-600 to-teal-600 text-white">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-6">{t('home:developers.title')}</h2>
-          <div className="flex flex-wrap justify-center items-center gap-8 mb-8">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg px-8 py-4 font-bold text-lg">
-              Palm Hills
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg px-8 py-4 font-bold text-lg">
-              Sodic
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg px-8 py-4 font-bold text-lg">
-              Emaar
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg px-8 py-4 font-bold text-lg">
-              Marassi
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg px-8 py-4 font-bold text-lg">
-              Mountain View
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg px-8 py-4 font-bold text-lg">
-              Hyde Park
-            </div>
-          </div>
-          <Link
-            to="/properties"
-            className="inline-block px-8 py-3 bg-white text-primary-blue rounded-lg font-semibold hover:scale-105 transition-transform duration-200"
-          >
-            {t('home:developers.seeAll')}
-          </Link>
-        </div>
-      </section>
-
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center mb-12">
-            <div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-2">{t('home:latestProperties.title')}</h2>
-              <p className="text-gray-600">{t('home:latestProperties.subtitle')}</p>
-            </div>
-            <Link
-              to="/properties"
-              className="px-6 py-3 bg-primary-blue text-white rounded-lg font-semibold hover:scale-105 transition-transform duration-200"
-            >
-              {t('home:latestProperties.viewAll')}
-            </Link>
           </div>
 
           {loading ? (
             <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-blue"></div>
-              <p className="text-gray-600 mt-4">{t('home:latestProperties.loading')}</p>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {properties.map((property) => (
-                <PropertyCardNew key={property.id} property={property} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {featuredProperties.map(property => (
+                  <PropertyCardNew key={property.id} property={property} />
+                ))}
+              </div>
+
+              <div className="text-center">
+                <Link
+                  to="/properties"
+                  className="inline-block px-8 py-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-smooth"
+                >
+                  {t('home:viewAllProperties')}
+                </Link>
+              </div>
+            </>
           )}
         </div>
       </section>
 
+      {/* Special Offers */}
+      <SpecialOffers properties={properties} />
+
+      {/* Popular Areas */}
+      <PopularAreas />
+
+      {/* Why Choose Us Section */}
       <section className="py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900">{t('home:whyChooseUs.title')}</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">{t('home:whyChooseUs.title')}</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">{t('home:whyChooseUs.subtitle')}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div className="text-center">
               <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <svg className="w-10 h-10 text-primary-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -311,16 +153,6 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">{t('home:whyChooseUs.verifiedListings')}</h3>
               <p className="text-gray-600">{t('home:whyChooseUs.verifiedListingsDesc')}</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-10 h-10 text-primary-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('home:whyChooseUs.trustedMarketers')}</h3>
-              <p className="text-gray-600">{t('home:whyChooseUs.trustedMarketersDesc')}</p>
             </div>
 
             <div className="text-center">
@@ -346,6 +178,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CTA Section */}
       <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-teal-600 text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-6">{t('home:cta.title')}</h2>
@@ -366,70 +199,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <footer className="bg-gray-900 text-white py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-            <div>
-              <h3 className="text-2xl font-bold mb-4">{t('common:footer.brand')}</h3>
-              <p className="text-gray-400">{t('common:footer.tagline')}</p>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-semibold mb-4">{t('common:footer.about')}</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">{t('common:footer.aboutUs')}</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">{t('common:footer.ourTeam')}</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">{t('common:footer.careers')}</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">{t('common:footer.press')}</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-semibold mb-4">{t('common:footer.support')}</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">{t('common:footer.contactUs')}</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">{t('common:footer.faqs')}</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">{t('common:footer.helpCenter')}</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">{t('common:footer.feedback')}</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-semibold mb-4">{t('common:footer.legal')}</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">{t('common:footer.privacyPolicy')}</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">{t('common:footer.termsOfService')}</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">{t('common:footer.cookiePolicy')}</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">{t('common:footer.disclaimer')}</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-800 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <p className="text-gray-400 mb-4 md:mb-0">{t('common:footer.copyright')}</p>
-              <div className="flex space-x-6">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

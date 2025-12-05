@@ -41,7 +41,13 @@
         "area": "متر مربع",
         "delivery": "التسليم",
         "viewDetails": "عرض التفاصيل",
-        "interested": "أنا مهتم"
+        "interested": "أنا مهتم",
+        "available": "متاح",
+        "soldOut": "مباع",
+        "reserved": "محجوز",
+        "beds": "غرف",
+        "baths": "حمامات",
+        "type": "النوع"
     },
     "propertyDetails": {
         "overview": "نظرة عامة",
@@ -61,6 +67,7 @@
         "sold": "مباع",
         "reserved": "محجوز",
         "contactMarketer": "تواصل مع المسوق",
+        "contactAgent": "تواصل مع الوكيل",
         "interested": "أنا مهتم",
         "backToProperties": "العودة للعقارات",
         "similarProperties": "عقارات مماثلة",

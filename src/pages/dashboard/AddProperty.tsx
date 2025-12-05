@@ -35,7 +35,16 @@ export default function AddProperty() {
         payment_plan: data.paymentPlan,
         images: imageUrls,
         description: data.description,
-        status: data.status
+        status: data.status,
+        // NEW FIELDS
+        project_id: data.projectId || null,
+        offer_type_id: data.offerTypeId || null,
+        provider_name: data.providerName || null,
+        furnished: data.furnished || false,
+        ownership_id: data.ownershipId || null,
+        location_label: data.locationLabel || null,
+        location_map_url: data.locationMapUrl || null,
+        detailed_description: data.detailedDescription || null
       }
 
       const { data: newProperty, error } = await supabase
@@ -46,6 +55,30 @@ export default function AddProperty() {
 
       if (error) {
         throw error
+      }
+
+      // Save amenities if provided
+      if (data.amenities && newProperty) {
+        const amenitiesList = data.amenities
+          .split(',')
+          .map((a: string) => a.trim())
+          .filter((a: string) => a)
+
+        if (amenitiesList.length > 0) {
+          const amenitiesData = amenitiesList.map((label: string) => ({
+            property_id: newProperty.id,
+            label
+          }))
+
+          const { error: amenitiesError } = await supabase
+            .from('property_amenities')
+            .insert(amenitiesData)
+
+          if (amenitiesError) {
+            console.error('Error adding amenities:', amenitiesError)
+            // Don't fail the whole operation if amenities fail
+          }
+        }
       }
 
       console.log('Property added to database:', newProperty)

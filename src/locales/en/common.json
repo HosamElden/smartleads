@@ -1,12 +1,16 @@
 {
   "header": {
-    "brand": "SmartLead",
+    "brand": "SmartLeads",
     "home": "Home",
     "properties": "Properties",
+    "sell": "Sell",
+    "rent": "Rent",
+    "agents": "Agents",
     "gallery": "Gallery X",
     "myInterests": "My Interests",
     "dashboard": "Dashboard",
     "login": "Login",
+    "signUp": "Sign Up",
     "logout": "Logout"
   },
   "footer": {
