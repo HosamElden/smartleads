@@ -11,6 +11,8 @@ import MarketerRegister from './pages/auth/MarketerRegister'
 import RegisterStep1 from './pages/auth/RegisterStep1'
 import CompleteProfile from './pages/auth/CompleteProfile'
 import Login from './pages/auth/Login'
+import ForgotPassword from './pages/auth/ForgotPassword'
+import ResetPassword from './pages/auth/ResetPassword'
 import Home from './pages/Home'
 import Properties from './pages/Properties'
 import PropertyDetails from './pages/PropertyDetails'
@@ -53,6 +55,10 @@ function App() {
               <Route path="/auth/register/buyer" element={<RegisterStep1 userType="buyer" />} />
               <Route path="/auth/register/marketer" element={<RegisterStep1 userType="marketer" />} />
               <Route path="/complete-profile" element={<CompleteProfile />} />
+
+              {/* Password reset routes */}
+              <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+              <Route path="/auth/reset-password" element={<ResetPassword />} />
 
               {/* Auth routes (with AuthLayout) */}
               <Route path="/auth" element={<AuthLayout />}>

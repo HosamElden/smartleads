@@ -1,7 +1,14 @@
 import { createContext, useContext, useState, ReactNode } from 'react'
 import { Buyer, Marketer } from '@/lib/types'
 
-type User = (Buyer | Marketer) & { userType: 'buyer' | 'marketer' }
+interface AdminUser {
+  id: string
+  email: string
+  fullName: string
+  userType: 'admin'
+}
+
+type User = (Buyer | Marketer | AdminUser) & { userType: 'buyer' | 'marketer' | 'admin' }
 
 interface AuthContextType {
   user: User | null

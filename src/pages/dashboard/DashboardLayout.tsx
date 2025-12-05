@@ -10,14 +10,14 @@ export default function DashboardLayout() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  // Restrict dashboard to marketers only
+  // Restrict dashboard to marketers and admins
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/auth/login')
       return
     }
 
-    if (user?.userType !== 'marketer') {
+    if (user?.userType !== 'marketer' && user?.userType !== 'admin') {
       // Redirect buyers to properties page
       navigate('/properties')
       return

@@ -1,0 +1,136 @@
+=== ADMIN USER DIAGNOSTIC CHECKLIST ===
+
+Run these steps IN ORDER to diagnose the admin user issue:
+
+STEP 1: Check if admin user exists
+=====================================
+Go to Supabase Dashboard → SQL Editor and run:
+
+SELECT id, email, user_type, is_active, email_verified, password
+FROM users 
+WHERE email = 'admin@smartleads.com';
+
+EXPECTED RESULT:
+- Should return 1 row
+- user_type should be 'admin'
+- is_active should be true
+- email_verified should be true
+- password should start with '$2b$10$'
+
+❌ IF NO ROWS RETURNED:
+   → Run the migration SQL below (STEP 2)
+
+✅ IF ROW EXISTS:
+   → Proceed to STEP 3
+
+
+STEP 2: Create admin user (if needed)
+======================================
+Run this in Supabase SQL Editor:
+
+INSERT INTO users (
+    id,
+    email,
+    password,
+    user_type,
+    is_active,
+    email_verified,
+    created_at,
+    updated_at
+)
+VALUES (
+    gen_random_uuid(),
+    'admin@smartleads.com',
+    '$2b$10$hYDb7z6dc2VVtyLXUtKSjuvxLOlqUBq6EXxnmFh4VY.5nJpVam.d6',
+    'admin',
+    true,
+    true,
+    now(),
+    now()
+)
+ON CONFLICT (email) DO UPDATE SET
+    password = '$2b$10$hYDb7z6dc2VVtyLXUtKSjuvxLOlqUBq6EXxnmFh4VY.5nJpVam.d6',
+    user_type = 'admin',
+    is_active = true,
+    email_verified = true,
+    updated_at = now();
+
+Then go back to STEP 1 to verify.
+
+
+STEP 3: Test login
+==================
+1. Open: http://localhost:5173/auth/login
+2. Enter:
+   Email: admin@smartleads.com
+   Password: Admin@123
+3. Click Login
+4. Open Browser Console (F12 → Console tab)
+5. Look for console.log messages
+
+WHAT HAPPENS?
+A) Login successful, redirected to /admin
+   ✅ SUCCESS! Admin user is working.
+
+B) Login successful, redirected to /properties
+   ❌ ISSUE: User type not recognized as admin
+   → Check console logs for user.userType value
+   → The Login.tsx might not be handling admin correctly
+
+C) Error: "Invalid credentials"
+   ❌ ISSUE: Password doesn't match
+   → Re-run STEP 2 to update password hash
+
+D) Stays on login page, no error
+   ❌ ISSUE: Check browser console for JavaScript errors
+   → Share the console errors with me
+
+
+STEP 4: Verify AdminLayout access
+==================================
+If login works but you can't access /admin:
+
+1. After logging in, manually go to: http://localhost:5173/admin
+2. Check what happens:
+
+A) You see the admin panel
+   ✅ SUCCESS!
+
+B) Redirected to home page (/)
+   ❌ ISSUE: AdminLayout.tsx is blocking access
+   → The access control check on line 12-16 might be wrong
+   → Check if user.userType === 'admin' in the code
+
+C) Shows "Not Found" or blank page
+   ❌ ISSUE: Route not configured
+   → Check App.tsx for /admin routes
+
+
+COMMON ISSUES & FIXES
+=====================
+
+Issue: "admin user not accessible"
+
+Possible causes:
+1. Admin user doesn't exist in database → Run STEP 2
+2. Wrong password hash → Re-run STEP 2 with correct hash
+3. Login.tsx not handling admin type → Check console logs
+4. AdminLayout blocking admin users → Check access control
+5. Browser has cached old user → Clear localStorage and try again
+
+To clear cache:
+1. Open browser console (F12)
+2. Run: localStorage.clear()
+3. Refresh page
+4. Try login again
+
+
+NEED HELP?
+==========
+Share with me:
+1. Result from STEP 1 (does user exist? what's the user_type?)
+2. What happens in STEP 3 (where does it redirect?)
+3. Any console errors (F12 → Console tab)
+4. Screenshot of what you see when trying to access /admin
+
+This will help me identify the exact issue!

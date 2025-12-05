@@ -111,6 +111,15 @@ export default function EnhancedHeader() {
                     {t('header.dashboard')}
                   </Link>
                 )}
+                {user?.userType === 'admin' && (
+                  <Link
+                    to="/admin"
+                    className={`hidden md:block transition-colors ${isScrolled ? 'text-white hover:text-header-accent' : 'text-gray-700 hover:text-primary-blue'
+                      }`}
+                  >
+                    Admin Panel
+                  </Link>
+                )}
 
                 {/* User Dropdown */}
                 <div ref={dropdownRef} className="relative hidden md:block">

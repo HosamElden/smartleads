@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { loginSchema, type LoginInput } from '@/lib/validations/auth'
 import { supabase } from '@/lib/supabase'
@@ -39,16 +39,29 @@ export default function Login() {
         const { data: user, error: userError } = await userApi.getUserByEmail(data.emailOrPhone)
 
         if (user) {
-          console.log('User found in users table, verifying password...')
+          console.log('User found in users table:', {
+            email: user.email,
+            userType: user.userType,
+            isActive: user.isActive,
+            emailVerified: user.emailVerified
+          })
+          console.log('Verifying password...')
 
           // Verify password using bcrypt
           const isPasswordValid = await userApi.verifyPassword(data.password, user.password)
 
+          console.log('Password verification result:', isPasswordValid)
+
           if (!isPasswordValid) {
+            console.error('Password verification FAILED')
+            console.log('Entered password:', data.password)
+            console.log('Stored hash (first 30 chars):', user.password.substring(0, 30))
             setValidationError(t('login.invalidCredentials'))
             setIsSubmitting(false)
             return
           }
+
+          console.log('Password verified successfully!')
 
           // Password is correct, check if profile is complete
           if (user.userType === 'buyer') {
@@ -99,6 +112,19 @@ export default function Login() {
               userType: 'marketer'
             })
             navigate('/dashboard/listings')
+            return
+
+          } else if (user.userType === 'admin') {
+            // Admin login - no profile completion needed
+            console.log('Admin user logging in...')
+            await userApi.updateLastLogin(user.id)
+            login({
+              id: user.id,
+              email: user.email,
+              fullName: 'Super Admin',
+              userType: 'admin'
+            })
+            navigate('/admin')
             return
           }
         }
@@ -227,6 +253,15 @@ export default function Login() {
         >
           {isSubmitting ? t('login.loggingIn') : t('login.loginButton')}
         </button>
+
+        <div className="text-center">
+          <Link
+            to="/auth/forgot-password"
+            className="text-sm text-primary-blue font-semibold hover:underline inline-block mb-4"
+          >
+            {t('login.forgotPassword')}
+          </Link>
+        </div>
 
         <div className="text-center space-y-2">
           <p className="text-sm text-gray-600">
