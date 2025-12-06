@@ -27,7 +27,6 @@ import Developers from './pages/dashboard/Developers'
 import DeveloperForm from './pages/dashboard/DeveloperForm'
 import Projects from './pages/dashboard/Projects'
 import ProjectForm from './pages/dashboard/ProjectForm'
-import ConnectionTest from './pages/ConnectionTest'
 import AdminLayout from './pages/admin/AdminLayout'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import LookupManagement from './pages/admin/LookupManagement'
@@ -49,7 +48,6 @@ function App() {
               <Route path="/properties" element={<Properties />} />
               <Route path="/properties/:id" element={<PropertyDetails />} />
               <Route path="/my-interests" element={<MyInterests />} />
-              <Route path="/test-connection" element={<ConnectionTest />} />
 
               {/* New two-step registration (outside AuthLayout - custom styling) */}
               <Route path="/auth/register/buyer" element={<RegisterStep1 userType="buyer" />} />
