@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/lib/context/AuthContext'
@@ -12,6 +13,11 @@ export default function AddProperty() {
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
   const { user } = useAuth()
+  const [propertyId, setPropertyId] = useState('')
+
+  useEffect(() => {
+    setPropertyId(uuidv4())
+  }, [])
 
   const handleSubmit = async (data: any) => {
     setIsSubmitting(true)
@@ -19,9 +25,10 @@ export default function AddProperty() {
     setSuccessMessage('')
 
     try {
-      const imageUrls = data.images.split('\n').map((url: string) => url.trim()).filter((url: string) => url)
+      const imageUrls = data.images
 
       const propertyData = {
+        id: propertyId,
         marketer_id: user?.id,
         title: data.title,
         type: data.type,
@@ -115,7 +122,7 @@ export default function AddProperty() {
       )}
 
       <div className="bg-white rounded-xl shadow-sm p-8">
-        <PropertyForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+        <PropertyForm onSubmit={handleSubmit} isSubmitting={isSubmitting} propertyId={propertyId} />
       </div>
     </div>
   )

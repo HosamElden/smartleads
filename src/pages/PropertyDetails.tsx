@@ -3,8 +3,10 @@ import { useParams, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import PropertyCardNew from '@/components/PropertyCardNew'
 import InterestButton from '@/components/InterestButton'
+import { Film } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Property } from '@/lib/types'
+import { optimizeCloudinaryUrl, isVideo } from '@/lib/cloudinary'
 
 export default function PropertyDetails() {
   const { t } = useTranslation('properties')
@@ -36,6 +38,8 @@ export default function PropertyDetails() {
           id: data.id,
           marketerId: data.marketer_id,
           title: data.title,
+          titleEn: data.title_en || data.title,
+          titleAr: data.title_ar || data.title,
           type: data.type,
           location: data.location,
           projectName: data.project_name,
@@ -47,6 +51,8 @@ export default function PropertyDetails() {
           paymentPlan: data.payment_plan,
           images: data.images,
           description: data.description,
+          descriptionEn: data.description_en || data.description,
+          descriptionAr: data.description_ar || data.description,
           status: data.status,
           createdAt: new Date(data.created_at),
           updatedAt: new Date(data.updated_at)
@@ -80,6 +86,8 @@ export default function PropertyDetails() {
         id: prop.id,
         marketerId: prop.marketer_id,
         title: prop.title,
+        titleEn: prop.title_en || prop.title,
+        titleAr: prop.title_ar || prop.title,
         type: prop.type,
         location: prop.location,
         projectName: prop.project_name,
@@ -91,6 +99,8 @@ export default function PropertyDetails() {
         paymentPlan: prop.payment_plan,
         images: prop.images,
         description: prop.description,
+        descriptionEn: prop.description_en || prop.description,
+        descriptionAr: prop.description_ar || prop.description,
         status: prop.status,
         createdAt: new Date(prop.created_at),
         updatedAt: new Date(prop.updated_at)
@@ -155,12 +165,22 @@ export default function PropertyDetails() {
               <div className="relative h-96 lg:h-[500px] bg-gray-900">
                 {property.images && property.images.length > 0 ? (
                   <>
-                    <img
-                      src={property.images[currentImageIndex]}
-                      alt={`${property.title} - Image ${currentImageIndex + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                    
+                    {isVideo(property.images[currentImageIndex]) ? (
+                      <video
+                        src={optimizeCloudinaryUrl(property.images[currentImageIndex])}
+                        className="w-full h-full object-contain bg-black"
+                        controls
+                        autoPlay
+                        muted
+                      />
+                    ) : (
+                      <img
+                        src={optimizeCloudinaryUrl(property.images[currentImageIndex], 1200)}
+                        alt={`${property.title} - Image ${currentImageIndex + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    )}
+
                     {/* Navigation Arrows */}
                     {property.images.length > 1 && (
                       <>
@@ -202,11 +222,16 @@ export default function PropertyDetails() {
                     <button
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
-                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                        index === currentImageIndex ? 'border-primary' : 'border-transparent opacity-60 hover:opacity-100'
-                      }`}
+                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all relative ${index === currentImageIndex ? 'border-primary' : 'border-transparent opacity-60 hover:opacity-100'
+                        }`}
                     >
-                      <img src={image} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
+                      {isVideo(image) ? (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-900">
+                          <Film className="text-white w-8 h-8" />
+                        </div>
+                      ) : (
+                        <img src={optimizeCloudinaryUrl(image, 200)} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
+                      )}
                     </button>
                   ))}
                 </div>
@@ -216,7 +241,7 @@ export default function PropertyDetails() {
             {/* Property Details */}
             <div className="bg-white rounded-xl shadow-lg p-6 lg:p-8 mb-8">
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{property.title}</h1>
-              
+
               <div className="flex items-center text-gray-600 mb-6">
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -266,9 +291,8 @@ export default function PropertyDetails() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">{t('status')}</h3>
-                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
-                    property.status === 'Available' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                  }`}>
+                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${property.status === 'Available' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
                     {property.status}
                   </span>
                 </div>
@@ -284,9 +308,9 @@ export default function PropertyDetails() {
                 {property.price.toLocaleString()}
                 <span className="text-lg font-normal text-gray-600 ml-2">SAR</span>
               </div>
-              
+
               <InterestButton property={property} />
-              
+
               {/* Contact Info */}
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <h3 className="font-semibold text-gray-900 mb-3">{t('contactAgent')}</h3>

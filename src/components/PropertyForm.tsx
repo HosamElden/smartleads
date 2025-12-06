@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'
 import { Property, Project, OfferType, Ownership } from '@/lib/types'
 import { projectApi, lookupApi } from '@/lib/api'
+import MediaUploader from './MediaUploader'
 
 const createPropertySchema = (t: (key: string) => string) => z.object({
   title: z.string().min(5, t('dashboard:addProperty.validation.titleMin')),
@@ -19,7 +20,7 @@ const createPropertySchema = (t: (key: string) => string) => z.object({
   paymentPlan: z.string().min(10, t('dashboard:addProperty.validation.paymentPlanMin')),
   description: z.string().min(20, t('dashboard:addProperty.validation.descriptionMin')),
   status: z.enum(['Available', 'Sold Out', 'Reserved']),
-  images: z.string().min(1, t('dashboard:addProperty.validation.imagesRequired')),
+  images: z.array(z.string()).min(1, t('dashboard:addProperty.validation.imagesRequired')),
   // NEW FIELDS
   projectId: z.string().optional(),
   offerTypeId: z.number().optional(),
@@ -35,12 +36,13 @@ const createPropertySchema = (t: (key: string) => string) => z.object({
 type PropertyFormData = z.infer<ReturnType<typeof createPropertySchema>>
 
 interface PropertyFormProps {
-  property?: Property
-  onSubmit: (data: PropertyFormData) => void
-  isSubmitting?: boolean
+  onSubmit: (data: any) => void
+  isSubmitting: boolean
+  propertyId?: string // Made optional to support both add and edit
+  property?: Property // Kept for existing functionality
 }
 
-export default function PropertyForm({ property, onSubmit, isSubmitting }: PropertyFormProps) {
+export default function PropertyForm({ property, onSubmit, isSubmitting, propertyId }: PropertyFormProps) {
   const { t } = useTranslation(['dashboard', 'common'])
   const propertySchema = createPropertySchema(t)
 
@@ -53,6 +55,8 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
   const {
     register,
     handleSubmit,
+    setValue,
+    getValues, // Added getValues to access current form values
     formState: { errors }
   } = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
@@ -69,7 +73,7 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
       paymentPlan: property.paymentPlan,
       description: property.description,
       status: property.status,
-      images: property.images.join('\n'),
+      images: property.images || [],
       // NEW FIELDS
       projectId: property.projectId?.toString() || '',
       offerTypeId: property.offerTypeId || undefined,
@@ -108,6 +112,10 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
 
     fetchLookupData()
   }, [])
+
+  const onImagesChange = (urls: string[]) => {
+    setValue('images', urls, { shouldValidate: true });
+  };
 
   if (loading) {
     return (
@@ -444,13 +452,11 @@ export default function PropertyForm({ property, onSubmit, isSubmitting }: Prope
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               {t('dashboard:addProperty.images')}
             </label>
-            <textarea
-              {...register('images')}
-              rows={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
-              placeholder={t('dashboard:addProperty.placeholders.images')}
+            <MediaUploader
+              defaultImages={getValues('images') || []}
+              onImagesChange={onImagesChange}
+              propertyId={propertyId}
             />
-            <p className="text-sm text-gray-600 mt-1">{t('dashboard:addProperty.imagesHint')}</p>
             {errors.images && <p className="text-red-600 text-sm mt-1">{errors.images.message}</p>}
           </div>
         </div>

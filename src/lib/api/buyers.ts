@@ -1,5 +1,6 @@
 import { supabase } from '../supabase'
 import type { Buyer } from '../types'
+import { calculateLeadScore } from '../scoring/calculateScore'
 
 /**
  * Buyers API
@@ -121,6 +122,18 @@ export const buyerApi = {
                 throw new Error('User not found')
             }
 
+            // Calculate buyer score based on profile data
+            const { score, tier } = calculateLeadScore({
+                fullName: profileData.fullName,
+                email: userData.email,
+                phone: profileData.phone,
+                password: userData.password,
+                budget: profileData.budget,
+                locations: profileData.locations,
+                propertyTypes: profileData.propertyTypes,
+                buyingIntent: profileData.buyingIntent
+            })
+
             const { data, error } = await supabase
                 .from('buyers')
                 .insert({
@@ -133,8 +146,8 @@ export const buyerApi = {
                     locations: profileData.locations,
                     property_types: profileData.propertyTypes,
                     buying_intent: profileData.buyingIntent || null,
-                    score: 0,
-                    score_tier: 'Cold'
+                    score,
+                    score_tier: tier
                 })
                 .select()
                 .single()
@@ -154,6 +167,9 @@ export const buyerApi = {
      */
     async createBuyer(buyerData: Omit<Buyer, 'id' | 'score' | 'scoreTier' | 'createdAt'>) {
         try {
+            // Calculate buyer score based on provided data
+            const { score, tier } = calculateLeadScore(buyerData)
+
             const { data, error } = await supabase
                 .from('buyers')
                 .insert({
@@ -165,8 +181,8 @@ export const buyerApi = {
                     locations: buyerData.locations,
                     property_types: buyerData.propertyTypes,
                     buying_intent: buyerData.buyingIntent || null,
-                    score: 0,
-                    score_tier: 'Cold'
+                    score,
+                    score_tier: tier
                 })
                 .select()
                 .single()

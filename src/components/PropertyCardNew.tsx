@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Property } from '@/lib/types'
 import InterestButton from './InterestButton'
+import { optimizeCloudinaryUrl } from '@/lib/cloudinary'
 
 interface PropertyCardProps {
   property: Property
@@ -9,7 +10,8 @@ interface PropertyCardProps {
 
 export default function PropertyCardNew({ property }: PropertyCardProps) {
   const { t } = useTranslation('properties')
-  const mainImage = property.images && property.images.length > 0 ? property.images[0] : '/placeholder-property.jpg'
+  const rawImage = property.images && property.images.length > 0 ? property.images[0] : '/placeholder-property.jpg'
+  const mainImage = optimizeCloudinaryUrl(rawImage, 800) // Resize to 800px width for cards
 
   // Status badge styling
   const getStatusBadge = () => {
@@ -18,7 +20,7 @@ export default function PropertyCardNew({ property }: PropertyCardProps) {
       'Sold Out': { bg: 'bg-red-500', text: t('propertyCard.soldOut') },
       'Reserved': { bg: 'bg-yellow-500', text: t('propertyCard.reserved') }
     }
-    
+
     const config = statusConfig[property.status as keyof typeof statusConfig] || statusConfig['Available']
     return (
       <div className={`${config.bg} text-white px-3 py-1 rounded-full text-sm font-semibold shadow-md`}>
@@ -37,15 +39,15 @@ export default function PropertyCardNew({ property }: PropertyCardProps) {
             alt={property.title}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           />
-          
+
           {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
+
           {/* Status Badge */}
           <div className="absolute top-4 right-4">
             {getStatusBadge()}
           </div>
-          
+
           {/* Price Tag */}
           <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-lg shadow-lg">
             <div className="text-2xl font-bold text-primary">
@@ -60,7 +62,7 @@ export default function PropertyCardNew({ property }: PropertyCardProps) {
           <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors line-clamp-2 min-h-[3.5rem]">
             {property.title}
           </h3>
-          
+
           {/* Location */}
           <div className="flex items-center text-gray-600 mb-4">
             <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,14 +80,14 @@ export default function PropertyCardNew({ property }: PropertyCardProps) {
               </svg>
               <span className="font-medium">{property.bedrooms}</span>
             </div>
-            
+
             <div className="flex items-center gap-1">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
               </svg>
               <span className="font-medium">{property.bathrooms}</span>
             </div>
-            
+
             <div className="flex items-center gap-1">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
@@ -95,7 +97,7 @@ export default function PropertyCardNew({ property }: PropertyCardProps) {
           </div>
         </div>
       </Link>
-      
+
       {/* Interest Button */}
       <div className="px-5 pb-5">
         <InterestButton property={property} />
